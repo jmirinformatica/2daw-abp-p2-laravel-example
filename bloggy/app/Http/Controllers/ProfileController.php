@@ -7,6 +7,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -31,6 +33,22 @@ class ProfileController extends Controller
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
+        
+        /**************************************************/
+        if ($request->has('avatar')) {
+            $upload = $request->file('avatar');
+            $uploadName = $upload->getClientOriginalName();
+            $uploadSize = $upload->getSize();
+            Log::debug("Storing file '{$uploadName}' ($uploadSize)...");
+            $path = $request->file('avatar')->storeAs(
+                "avatars/{$request->user()->id}", // Path
+                $uploadName,    // Filename
+                'public'        // Disk
+            );
+            Log::debug("Uploaded file stored at $path");
+            $request->user()->avatar = Storage::url($path);
+        }
+        /**************************************************/
 
         $request->user()->save();
 
