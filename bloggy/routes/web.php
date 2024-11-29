@@ -17,3 +17,6 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('/contact', [SiteController::class, 'contact'])->name('contact.form');
+Route::post('/contact', [SiteController::class, 'sendMail'])->name('contact.send');
