@@ -3,4 +3,4 @@
 <p><strong>Correu electrònic:</strong> {{ $email }}</p>
 <p><strong>Telèfon:</strong> {{ $phone ?? 'No especificat' }}</p>
 <p><strong>Missatge:</strong></p>
-<p>{{ $message }}</p>
+<p>{{ $body }}</p>

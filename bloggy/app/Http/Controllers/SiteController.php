@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\Debugbar\Facades\Debugbar;
 
@@ -23,14 +23,14 @@ class SiteController extends Controller
         return view('contact');
     }
 
-    public function sendMail(): RedirectResponse 
+    public function sendMail(Request $request): RedirectResponse 
     {
         // Validació de les dades del formulari
         $validatedData = $request->validate([
-            'name'    => 'nullable|string|max:255',
+            'name'    => 'required|string|max:255',
             'email'   => 'required|email',
             'phone'   => 'nullable|string|max:15',
-            'message' => 'required|string|min:5',
+            'body'    => 'required|string|min:5',
         ]);
 
         // Enviament del correu
@@ -40,6 +40,7 @@ class SiteController extends Controller
                     ->replyTo($validatedData['email']);
         });
 
-        return Redirect::to('contact');
+        return redirect()->route('contact.form')
+                         ->with('success', _('Message sent!'));
     }
 }
