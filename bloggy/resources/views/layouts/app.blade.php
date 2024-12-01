@@ -28,8 +28,8 @@
             @endisset
 
             <!-- Flash messages -->
-            @include('layouts.flash-messages')
-
+            <x-flash class="w-full py-4" />
+            
             <!-- Page Content -->
             <main>
                 {{ $slot }}

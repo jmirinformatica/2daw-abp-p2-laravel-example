@@ -8,5 +8,5 @@ $tailwindClass = [
 @endphp
 <div class="{{ $tailwindClass[$type] }}" role="alert">
     {{ $message }}
-    <button type="button" class="float-right" data-dismiss-target="alert" aria-label="Close">X</button>
+    <button type="button" class="float-right" aria-label="Close" onclick="this.parentElement.remove()" >X</button>
 </div>
