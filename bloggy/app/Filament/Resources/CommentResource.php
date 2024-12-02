@@ -66,13 +66,13 @@ class CommentResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('comment')
-                    ->limit(40)
+                    ->limit(30)
                     ->searchable(),
+                Tables\Columns\TextColumn::make('post.title')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('author.name')
                     ->sortable()
                     ->hidden(! auth()->user()->isAdmin()),
-                Tables\Columns\TextColumn::make('post.title')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
