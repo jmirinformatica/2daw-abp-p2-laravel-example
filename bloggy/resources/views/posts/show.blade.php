@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
     <div class="">
-        {{ $post->body }}
+        {!! $post->body !!}
     </div>
     <table class="table mt-8">
         <tbody>
@@ -30,7 +30,7 @@
         </x-primary-button>
         @endcan
         @can('delete', $post)
-        <x-danger-button href="{{ route('posts.destroy', $post) }}">
+        <x-danger-button href="{{ route('posts.delete', $post) }}">
             {{ __('Delete') }}
         </x-danger-button>
         @endcan

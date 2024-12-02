@@ -93,7 +93,7 @@ class PostController extends Controller
         if ($post) {
             // Patró PRG amb missatge d'èxit
             return redirect()->route('posts.show', $post)
-                ->with('success', __(':resource successfully saved', [
+                ->with('success', __(':resource successfully created', [
                     'resource' => __('Post')
                 ]));
         } else {
@@ -124,7 +124,13 @@ class PostController extends Controller
      */
     public function edit(Request $request, Post $post)
     {
-        //
+        if ($request->user()->cannot('update', $post)) {
+            abort(403);
+        }
+
+        return view("posts.edit", [
+            'post'   => $post,
+        ]);
     }
 
     /**
@@ -132,7 +138,34 @@ class PostController extends Controller
      */
     public function update(PostUpdateRequest $request, Post $post)
     {
-        //
+        if ($request->user()->cannot('update', $post)) {
+            abort(403);
+        }
+
+        // Validar dades del formulari
+        $validatedData = $request->validated();
+
+        // Actualitzar dades a BD
+        Log::debug("Updating DB...");
+        if ($title = $request->get('title')) {
+            $post->title = $title;
+        }
+        if ($body = $request->get('body')) {
+            $post->body = $body;
+        }
+        $ok = $post->save();
+
+        if ($ok) {
+            // Patró PRG amb missatge d'èxit
+            return redirect()->route('posts.show', $post)
+                ->with('success', __(':resource successfully updated', [
+                    'resource' => __('Post')
+                ]));
+        } else {
+            // Patró PRG amb missatge d'error
+            return redirect()->route("posts.edit")
+                ->with('error', __('ERROR saving data'));
+        }
     }
 
     /**
@@ -140,6 +173,38 @@ class PostController extends Controller
      */
     public function destroy(Request $request, Post $post)
     {
-        //
+        if ($request->user()->cannot('delete', $post)) {
+            abort(403);
+        }
+
+        // Eliminar post de BD
+        $ok = $post->delete();
+
+        // Patró PRG amb missatge d'èxit
+        if ($ok) {
+            // Patró PRG amb missatge d'èxit
+            return redirect()->route('posts.myIndex', $post)
+                ->with('success', __(':resource successfully deleted', [
+                    'resource' => __('Post')
+                ]));
+        } else {
+            // Patró PRG amb missatge d'error
+            return redirect()->route("posts.myIndex")
+                ->with('error', __('ERROR removing data'));
+        }
+    }
+
+    /**
+     * Confirm specified resource deletion from storage.
+     */
+    public function delete(Request $request, Post $post)
+    {
+        if ($request->user()->cannot('delete', $post)) {
+            abort(403);
+        }
+                    
+        return view("posts.delete", [
+            'post' => $post
+        ]);
     }
 }
