@@ -15,6 +15,7 @@ return [
     'body' => 'Body',
     'author' => 'Author',
     'author.name' => 'Author',
+    'comment' => 'Comment',
     'comments_count' => 'Comments',
     'created_at' => 'Created',
     'updated_at' => 'Updated',

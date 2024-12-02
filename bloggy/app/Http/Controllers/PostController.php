@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Requests\PostStoreRequest;
+use App\Http\Requests\PostUpdateRequest;
 
 class PostController extends Controller
 {
@@ -64,29 +67,62 @@ class PostController extends Controller
      */
     public function create(Request $request)
     {
-        //
+        if ($request->user()->cannot('create', Post::class)) {
+            abort(403);
+        }
+
+        return view("posts.create");
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PostStoreRequest $request)
     {
-        //
+        // Validar dades del formulari
+        $validatedData = $request->validated();
+        
+        // Desar dades a BD
+        Log::debug("Saving post at DB...");
+        $post = Post::create([
+            'title'     => $validatedData['title'],
+            'body'      => $validatedData['body'],
+            'author_id' => auth()->user()->id,
+        ]);
+
+        if ($post) {
+            // Patró PRG amb missatge d'èxit
+            return redirect()->route('posts.show', $post)
+                ->with('success', __(':resource successfully saved', [
+                    'resource' => __('Post')
+                ]));
+        } else {
+            // Patró PRG amb missatge d'error
+            return redirect()->route("posts.create")
+                ->with('error', __('ERROR saving data'));
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(Request $request, Post $post)
     {
-        //
+        if ($request->user()->cannot('view', $post)) {
+            abort(403);
+        }
+
+        $post->loadCount('comments');
+
+        return view("posts.show", [
+            'post'     => $post,
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Post $post)
+    public function edit(Request $request, Post $post)
     {
         //
     }
@@ -94,7 +130,7 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(PostUpdateRequest $request, Post $post)
     {
         //
     }
@@ -102,7 +138,7 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Request $request, Post $post)
     {
         //
     }

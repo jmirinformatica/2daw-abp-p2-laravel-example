@@ -60,7 +60,7 @@
                     <a title="{{ __('Edit') }}"   href="{{ route($parentRoute . '.edit',   $row) }}">📝</a>
                     @endcan
                     @can('delete', $row)
-                    <a title="{{ __('Delete') }}" href="{{ route($parentRoute . '.delete', $row) }}">🗑️</a>                
+                    <a title="{{ __('Delete') }}" href="{{ route($parentRoute . '.destroy', $row) }}">🗑️</a>                
                     @endcan
                 </td>
                 @endif

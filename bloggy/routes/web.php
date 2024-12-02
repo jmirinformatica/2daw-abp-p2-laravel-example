@@ -36,3 +36,6 @@ Route::resource('posts', PostController::class)
 
 Route::get('/my-posts', [PostController::class, 'myIndex'])->name('posts.myIndex')
     ->middleware(['auth']);
+
+Route::resource('posts.comments', CommentController::class)
+    ->middleware(['auth']);
