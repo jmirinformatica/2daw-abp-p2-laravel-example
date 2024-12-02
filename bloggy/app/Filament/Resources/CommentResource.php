@@ -2,10 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PostResource\Pages;
-use App\Filament\Resources\PostResource\RelationManagers;
-use App\Models\Post;
-use App\Models\User;
+use App\Filament\Resources\CommentResource\Pages;
+use App\Filament\Resources\CommentResource\RelationManagers;
+use App\Models\Comment;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,11 +13,11 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class PostResource extends Resource
+class CommentResource extends Resource
 {
-    protected static ?string $model = Post::class;
+    protected static ?string $model = Comment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-pencil';
+    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
 
     public static function getNavigationGroup(): string
     {
@@ -29,25 +28,26 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Card::make()
-                ->schema([
-                    Forms\Components\TextInput::make('title')
-                        ->required(),
-                    Forms\Components\RichEditor::make('body')
-                        ->required(),
-                    // Admin
-                    Forms\Components\Select::make('author_id')
-                        ->required()
-                        ->hidden(! auth()->user()->isAdmin())
-                        ->default(auth()->user()->id)
-                        ->label('Author')
-                        ->relationship(name: 'author', titleAttribute: 'name'),
-                    // NOT admin
-                    Forms\Components\Hidden::make('author_id')
-                        ->required()
-                        ->hidden(auth()->user()->isAdmin())
-                        ->default(auth()->user()->id),
-                ])
+                Forms\Components\Textarea::make('comment')
+                    ->required()
+                    ->rows(6),
+                Forms\Components\Select::make('post_id')
+                    ->required()
+                    ->label('Post')
+                    ->relationship(name: 'post', titleAttribute: 'title')
+                    ->searchable(),
+                // Admin
+                Forms\Components\Select::make('author_id')
+                    ->required()
+                    ->hidden(! auth()->user()->isAdmin())
+                    ->default(auth()->user()->id)
+                    ->label('Author')
+                    ->relationship(name: 'author', titleAttribute: 'name'),
+                // NOT admin
+                Forms\Components\Hidden::make('author_id')
+                    ->required()
+                    ->hidden(auth()->user()->isAdmin())
+                    ->default(auth()->user()->id),
             ]);
     }
 
@@ -65,14 +65,14 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('body')
+                Tables\Columns\TextColumn::make('comment')
                     ->limit(40)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('author.name')
                     ->sortable()
                     ->hidden(! auth()->user()->isAdmin()),
+                Tables\Columns\TextColumn::make('post.title')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -87,7 +87,6 @@ class PostResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -97,20 +96,10 @@ class PostResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPosts::route('/'),
-            'create' => Pages\CreatePost::route('/create'),
-            'view' => Pages\ViewPost::route('/{record}'),
-            'edit' => Pages\EditPost::route('/{record}/edit'),
+            'index' => Pages\ManageComments::route('/'),
         ];
     }
 }
