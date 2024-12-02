@@ -65,10 +65,9 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     public function canAccessPanel(Panel $panel): bool
     {
-        // Només tindrem un admin creat pel germinador corresponent
-        return $this->isAdmin() && $this->hasVerifiedEmail();
+        return $this->hasVerifiedEmail();
     }
-
+    
     public function getFilamentAvatarUrl(): ?string
     {
         return Storage::url($this->avatar);
