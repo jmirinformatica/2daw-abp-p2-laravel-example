@@ -53,10 +53,20 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         ];
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->name === 'admin';
+    }
+
+    public function isPublisher(): bool
+    {
+        return !$this->isAdmin();
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
         // Només tindrem un admin creat pel germinador corresponent
-        return $this->name === 'admin' && $this->hasVerifiedEmail();
+        return $this->isAdmin() && $this->hasVerifiedEmail();
     }
 
     public function getFilamentAvatarUrl(): ?string
