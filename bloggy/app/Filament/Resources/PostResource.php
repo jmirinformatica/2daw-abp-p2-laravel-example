@@ -29,20 +29,23 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required(),
-                Forms\Components\RichEditor::make('body')
-                    ->required(),
-                Forms\Components\Hidden::make('author_id')
-                    ->required()
-                    ->hidden(auth()->user()->isAdmin())
-                    ->default(auth()->user()->id),
-                Forms\Components\Select::make('author_id')
-                    ->required()
-                    ->hidden(! auth()->user()->isAdmin())
-                    ->default(auth()->user()->id)
-                    ->label('Author')
-                    ->relationship(name: 'author', titleAttribute: 'name')
+                Forms\Components\Card::make()
+                ->schema([
+                    Forms\Components\TextInput::make('title')
+                        ->required(),
+                    Forms\Components\RichEditor::make('body')
+                        ->required(),
+                    Forms\Components\Hidden::make('author_id')
+                        ->required()
+                        ->hidden(auth()->user()->isAdmin())
+                        ->default(auth()->user()->id),
+                    Forms\Components\Select::make('author_id')
+                        ->required()
+                        ->hidden(! auth()->user()->isAdmin())
+                        ->default(auth()->user()->id)
+                        ->label('Author')
+                        ->relationship(name: 'author', titleAttribute: 'name')
+                ])
             ]);
     }
 
@@ -52,7 +55,7 @@ class PostResource extends Resource
         $user = auth()->user();
         
         // L'administrador pot veure-ho tot
-        // Filtra només els registres de l'usuari autenticat
+        // La resta només el seu propi contingut
         return $user->isAdmin() ? $query : $query->where('author_id', $user->id);
     }
 
@@ -66,7 +69,8 @@ class PostResource extends Resource
                     ->limit(40)
                     ->searchable(),
                 Tables\Columns\TextColumn::make('author.name')
-                    ->sortable(),
+                    ->sortable()
+                    ->hidden(! auth()->user()->isAdmin()),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
