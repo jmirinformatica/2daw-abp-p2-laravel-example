@@ -53,6 +53,20 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         ];
     }
 
+    // Relationships
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class, 'author_id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'author_id');
+    }
+
+    // Authorization methods
+
     public function isAdmin(): bool
     {
         return $this->name === 'admin';
@@ -62,6 +76,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     {
         return !$this->isAdmin();
     }
+
+    // Filament methods
 
     public function canAccessPanel(Panel $panel): bool
     {
