@@ -13,3 +13,9 @@ Alpine.start();
 import { Dropdown, Ripple, initTWE } from "tw-elements";
 
 initTWE({ Dropdown, Ripple });
+
+/**
+ * Flowbite
+ * @see https://flowbite.com/docs/getting-started/laravel/
+ */
+import 'flowbite';
