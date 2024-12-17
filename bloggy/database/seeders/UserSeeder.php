@@ -20,6 +20,12 @@ class UserSeeder extends Seeder
             'email'     => config('admin.email'),
             'password'  => Hash::make(config('admin.password')),
         ]);
+        // Blogger
+        User::factory()->create([
+            'name'      => 'blogger',
+            'email'     => 'blogger@example.net',
+            'password'  => Hash::make('12345678'),
+        ]);
         // Other users
         User::factory(10)->create();
     }
