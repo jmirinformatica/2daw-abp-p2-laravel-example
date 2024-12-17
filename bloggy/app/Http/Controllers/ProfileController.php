@@ -42,16 +42,7 @@ class ProfileController extends Controller
         /**************************************************/
         if ($request->has('avatar')) {
             $upload = $request->file('avatar');
-            $uploadName = $upload->getClientOriginalName();
-            $uploadSize = $upload->getSize();
-            Log::debug("Storing file '{$uploadName}' ($uploadSize)...");
-            $path = $request->file('avatar')->storeAs(
-                "avatars/{$request->user()->id}", // Path
-                $uploadName,    // Filename
-                'public'        // Disk
-            );
-            Log::debug("Uploaded file stored at $path");
-            $request->user()->avatar = Storage::url($path);
+            $request->user()->uploadAvatar($upload);
         }
         /**************************************************/
 
