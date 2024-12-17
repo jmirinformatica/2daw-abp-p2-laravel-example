@@ -42,7 +42,7 @@ class TokenController extends Controller
             $user->uploadAvatar($upload);
             $user->save();
         }
-        
+
         return $this->_generateTokenResponse($user);
     }
 
@@ -58,8 +58,6 @@ class TokenController extends Controller
             $user = User::where([
                 ["email", "=", $credentials["email"]]
             ])->firstOrFail();
-            // Revoke all old tokens
-            $user->tokens()->delete();
             // Generate new token
             return $this->_generateTokenResponse($user); 
         } else {
