@@ -45,7 +45,7 @@ class ProfileController extends Controller
             $uploadName = $upload->getClientOriginalName();
             $uploadSize = $upload->getSize();
             Log::debug("Storing file '{$uploadName}' ($uploadSize)...");
-            $path = $request->file('avatar')->storeAs(
+            $path = $upload->storeAs(
                 "avatars/{$request->user()->id}", // Path
                 $uploadName,    // Filename
                 'public'        // Disk
