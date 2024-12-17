@@ -17,6 +17,11 @@
             <x-input-error class="mt-2" :messages="$errors->get('body')" />
         </div>
         <div>
+            @include('posts.partials.status-select', [
+                'statuses' => $statuses,
+            ])
+        </div>
+        <div>
             <x-primary-button type="submit">
                 {{ __('Create') }}
             </x-primary-button>

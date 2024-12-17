@@ -10,15 +10,21 @@
     <table class="table mt-8">
         <tbody>
             <tr>
-                <td><strong>Author</strong></td>
+                <td><strong>{{ __('Author') }}</strong></td>
                 <td>{{ $post->author->name }}</td>
             </tr>
+            @can('update', $post)
             <tr>
-                <td><strong>Created</strong></td>
+                <td><strong>{{ __('Status') }}</strong></td>
+                <td>{{ $post->status->name }}</td>
+            </tr>
+            @endcan
+            <tr>
+                <td><strong>{{ __('Created') }}</strong></td>
                 <td>{{ $post->created_at }}</td>
             </tr>
             <tr>
-                <td><strong>Updated</strong></td>
+                <td><strong>{{ __('Updated') }}</strong></td>
                 <td>{{ $post->updated_at }}</td>
             </tr>
         </tbody>

@@ -26,8 +26,9 @@ class PostUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'nullable|string|max:255',
-            'body'  => 'nullable|string|max:1024',
+            'title'     => 'nullable|string|max:255',
+            'body'      => 'nullable|string|max:1024',
+            'status_id' => 'nullable|integer|exists:statuses,id',
         ];        
     }
 }

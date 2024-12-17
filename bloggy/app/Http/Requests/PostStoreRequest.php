@@ -14,8 +14,9 @@ class PostStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|string|max:255',
-            'body'  => 'required|string|max:1024',
+            'title'     => 'required|string|max:255',
+            'body'      => 'required|string|max:1024',
+            'status_id' => 'required|integer|exists:statuses,id',
         ];
     }
 }

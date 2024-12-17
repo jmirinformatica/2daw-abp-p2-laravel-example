@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Models\Post;
+use App\Models\Status;
 use App\Http\Requests\PostStoreRequest;
 use App\Http\Requests\PostUpdateRequest;
 
@@ -48,7 +49,11 @@ class PostController extends Controller
         }
 
         if ($creator) {
+            // Show user posts
             $collectionQuery->where('author_id', '=', $request->user()->id);
+        } else {
+            // Show all published posts
+            $collectionQuery->where('status_id', '=', Status::PUBLISHED);
         }
         
         // Pagination
@@ -57,8 +62,8 @@ class PostController extends Controller
             : $collectionQuery->get();
         
         return view("posts.index", [
-            "posts" => $posts,
-            "search" => $search
+            'posts' => $posts,
+            'search' => $search
         ]);
     }
 
@@ -71,7 +76,9 @@ class PostController extends Controller
             abort(403);
         }
 
-        return view("posts.create");
+        return view("posts.create", [
+            'statuses' => Status::all()
+        ]);
     }
 
     /**
@@ -88,6 +95,7 @@ class PostController extends Controller
             'title'     => $validatedData['title'],
             'body'      => $validatedData['body'],
             'author_id' => auth()->user()->id,
+            'status_id' => $validatedData['status_id'],
         ]);
 
         if ($post) {
@@ -130,6 +138,7 @@ class PostController extends Controller
 
         return view("posts.edit", [
             'post'   => $post,
+            'statuses' => Status::all()
         ]);
     }
 
@@ -152,6 +161,9 @@ class PostController extends Controller
         }
         if ($body = $request->get('body')) {
             $post->body = $body;
+        }
+        if ($status = $request->get('status_id')) {
+            $post->status_id = $status;
         }
         $ok = $post->save();
 
