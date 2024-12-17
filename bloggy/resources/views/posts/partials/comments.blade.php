@@ -26,7 +26,7 @@
 <div class="mt-8">
     <ul class="list-group">
     @foreach($post->comments as $comment)
-        <li class="list-group-item">
+        <li class="list-group-item mb-10">
             <p><b>{{ $comment->author->name }}</b></p> 
             <p>{{ $comment->comment }}</p>
             <p>{{ $comment->created_at->format('d/m/Y') }}</p>

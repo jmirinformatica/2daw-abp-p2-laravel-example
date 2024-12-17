@@ -13,6 +13,7 @@ class Post extends Model
         'title',
         'body',
         'author_id',
+        'status_id'
     ];
     
     // Relationships
@@ -52,4 +53,15 @@ class Post extends Model
         $user = auth()->user();
         return $this->commentedByUser($user);
     }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
+    
+    public function isPublished()
+    {
+        return $this->status_id === Status::PUBLISHED;
+    }
+
 }

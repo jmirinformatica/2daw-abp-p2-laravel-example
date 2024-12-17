@@ -17,7 +17,12 @@
             <x-textarea id="body" name="body" class="mt-1 block w-full" :value="$post->body" required autofocus />
             <x-input-error class="mt-2" :messages="$errors->get('body')" />
         </div>
-
+        <div>
+            @include('posts.partials.status-select', [
+                'statuses' => $statuses,
+                'status_id' => $post->status_id
+            ])
+        </div>
         <div>
             <x-primary-button>
                 {{ __('Update') }}
