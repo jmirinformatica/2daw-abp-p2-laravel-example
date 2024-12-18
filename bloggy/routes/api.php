@@ -10,7 +10,6 @@ use App\Http\Controllers\Api\CommentController;
 
 Route::middleware('guest')->group(function () {
     // Token
-    Route::post('register', [TokenController::class, 'register']);
     Route::post('login', [TokenController::class, 'login']);
     // Statuses
     Route::apiResource('statuses', StatusController::class);
