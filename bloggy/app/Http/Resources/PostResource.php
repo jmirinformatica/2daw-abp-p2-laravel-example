@@ -25,7 +25,7 @@ class PostResource extends JsonResource
             // Conditional data
             'comments_count' => $this->whenCounted('comments'),
             'comments' => CommentResource::collection($this->whenLoaded('comments')),
-            'commented' => $this->when($request->user(), $this->commentedByAuthUser())
+            'commented' => $this->when(!is_null($request->user()), $this->commentedByAuthUser())
         ];
     }
 }

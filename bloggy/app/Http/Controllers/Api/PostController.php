@@ -13,7 +13,7 @@ use App\Models\Post;
 use App\Models\File;
 use App\Models\Like;
 use App\Http\Resources\PostResource;
-use App\Http\Resources\PaginateCollection;
+use App\Http\Resources\PostCollection;
 
 class PostController extends Controller
 {
@@ -24,37 +24,22 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->user()->cannot('viewAny', Post::class)) {
-            abort(403);
-        }
-
-        if ($request->user()->cannot('viewAny', Post::class)) {
-            abort(403);
-        }
-
-        $query = Post::withCount(['likes','comments']);
+        $query = Post::withCount(['comments']);
 
         // Filters
         if ($body = $request->get('body')) {
             $query->where('body', 'like', "%{$body}%");
         }
         
-        if ($status_id = $request->get('status_id')) {
-            $query->where('status_id', $status_id); 
-        }
-        
-        if ($author = $request->get('author')) {
-            $query->where('author_id', $author); 
+        if ($author_id = $request->get('author_id')) {
+            $query->where('author_id', $author_id);
         }
 
         // Pagination
         $paginate = $request->get('paginate', 0);
         $data = $paginate ? $query->paginate() : $query->get();
-
-        return response()->json([
-            'success' => true,
-            'data'    => new PaginateCollection($data, PostResource::class)
-        ], 200);
+        
+        return new PostCollection($data);
     }
 
     /**
@@ -70,34 +55,21 @@ class PostController extends Controller
         }
 
         $validatedData = $request->validated();
-        $upload        = $request->file('upload');
 
-        $file = new File();
-        $fileOk = $file->diskSave($upload);
-
-        if ($fileOk) {
-            Log::debug("Saving post at DB...");
-            $post = Post::create([
-                'body'          => $validatedData['body'],
-                'file_id'       => $file->id,
-                'latitude'      => $validatedData['latitude'],
-                'longitude'     => $validatedData['longitude'],
-                'visibility_id' => $validatedData['visibility'],
-                'author_id'     => auth()->user()->id,
-            ]);
-            Log::debug("DB storage OK");
-            return response()->json([
-                'success' => true,
-                'data'    => new PostResource($post)
-            ], 201);
-        } else {
-            return response()->json([
-                'success'  => false,
-                'message' => 'Error uploading file'
-            ], 500);
-        }
+        Log::debug("Saving post at DB...");
+        $post = Post::create([
+            'title'     => $validatedData['title'],
+            'body'      => $validatedData['body'],
+            'status_id' => $validatedData['status_id'],
+            'author_id' => $request->user()->id,
+        ]);
+        Log::debug("DB storage OK");
+        return response()->json([
+            'success' => true,
+            'data'    => new PostResource($post)
+        ], 201);
     }
-
+    
     /**
      * Display the specified resource.
      *
@@ -125,19 +97,6 @@ class PostController extends Controller
         }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  PostUpdateRequest  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update_workaround(PostUpdateRequest $request, $id)
-    {
-        // File upload workaround
-        return $this->update($request, $id);
-    }
-    
     /**
      * Update the specified resource in storage.
      *

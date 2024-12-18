@@ -2,8 +2,6 @@
 
 namespace Tests;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
 use App\Models\User;
 
@@ -13,26 +11,33 @@ abstract class ApiTestCase extends TestCase
     public static array $validData = [];
     public static array $invalidData = [];
     
-    public static function setUpBeforeClass() : void
+    protected function _testCreateUser()
     {
-        parent::setUpBeforeClass();
-
-        // Create test user (BD store later)
+        // Create user (DB)
         $name = "test_" . time();
         self::$testUser = new User([
             "name"      => "{$name}",
             "email"     => "{$name}@mailinator.com",
             "password"  => "12345678"
         ]);
+        self::$testUser->save();
+        // Check user exists
+        $this->assertDatabaseHas('users', [
+            'email' => self::$testUser->email,
+        ]);
+        return self::$testUser;
     }
 
-    public static function tearDownAfterClass() : void
-    {
-        parent::tearDownAfterClass();
-        
-        // TODO Delete user after test...
-        // $user = User::where('email', self::$testUser->email)->first();
-        // $user->delete();
+    public function _testDeleteUser()
+    {   
+        if (!is_null(self::$testUser)) {
+            // Delete user (DB)
+            self::$testUser->delete();
+            // Check user not exists
+            $this->assertDatabaseMissing('users', [
+                'email' => self::$testUser->email,
+            ]);
+        }
     }
 
     protected static function _createValidFakeFile()
@@ -56,7 +61,6 @@ abstract class ApiTestCase extends TestCase
         // Check JSON properties
         $response->assertJson([
             "success" => true,
-            "data"    => true, // any value
         ]);
         // Check JSON dynamic values
         $response->assertJsonPath("data", 
@@ -64,7 +68,7 @@ abstract class ApiTestCase extends TestCase
         );
     }
 
-    protected function _test_error($response)
+    protected function _test_validation_error($response)
     {
         // Check response
         $response->assertStatus(422);
@@ -84,10 +88,10 @@ abstract class ApiTestCase extends TestCase
     
     protected function _test_notfound($response)
     {
-        $this->_test_anyerror($response, 404);
+        $this->_test_error($response, 404);
     }
     
-    protected function _test_anyerror($response, $status=500)
+    protected function _test_error($response, $status=500)
     {
         // Check JSON response
         $response->assertStatus($status);
@@ -100,25 +104,5 @@ abstract class ApiTestCase extends TestCase
         $response->assertJsonPath("message", 
             fn ($message) => !empty($message) && is_string($message)
         );
-    }
-
-    protected function _testCreateUser()
-    {
-        // Create user (DB)
-        self::$testUser->save();
-        // Check user exists
-        $this->assertDatabaseHas('users', [
-            'email' => self::$testUser->email,
-        ]);
-    }
-
-    public function _testDeleteUser()
-    {
-        // Delete user (DB)
-        self::$testUser->delete();
-        // Check user not exists
-        $this->assertDatabaseMissing('users', [
-            'email' => self::$testUser->email,
-        ]);
     }
 }

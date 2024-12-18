@@ -51,7 +51,7 @@ class Post extends Model
     public function commentedByAuthUser()
     {
         $user = auth()->user();
-        return $this->commentedByUser($user);
+        return $user && $this->commentedByUser($user);
     }
 
     public function status()

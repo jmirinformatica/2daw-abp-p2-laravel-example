@@ -15,17 +15,8 @@ class PostCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            "collection" => $this->collection,
-            "links" => $this->linkCollection(),
-            "meta" => [
-                "current_page" => $this->currentPage(),
-                "last_page" => $this->lastPage(),
-                "per_page" => $this->perPage(),
-                "from" => $this->firstItem(),
-                "to" => $this->lastItem(),
-                "total" => $this->total(),
-                "path" => $this->path(),
-            ]
+            "success" => true,
+            "data"    => $this->collection,
         ];
     }
 }
