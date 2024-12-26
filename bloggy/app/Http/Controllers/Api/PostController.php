@@ -24,21 +24,22 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
+        Log::debug("Query posts at DB...");
         $query = Post::withCount(['comments']);
 
-        // Filters
+        // Filters?
         if ($body = $request->get('body')) {
             $query->where('body', 'like', "%{$body}%");
         }
-        
         if ($author_id = $request->get('author_id')) {
             $query->where('author_id', $author_id);
         }
 
-        // Pagination
+        // Pagination?
         $paginate = $request->get('paginate', 0);
         $data = $paginate ? $query->paginate() : $query->get();
         
+        Log::debug("DB operation OK");
         return new PostCollection($data);
     }
 
@@ -63,7 +64,7 @@ class PostController extends Controller
             'status_id' => $validatedData['status_id'],
             'author_id' => $request->user()->id,
         ]);
-        Log::debug("DB storage OK");
+        Log::debug("DB operation OK");
         return response()->json([
             'success' => true,
             'data'    => new PostResource($post)
@@ -76,25 +77,25 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
+        Log::debug("Query post {$id} at DB...");
         $post = Post::find($id);
-        
-        if ($post) {
-            if ($request->user()->cannot('view', $post)) {
-                abort(403);
-            }
-            $post->loadCount(['likes','comments']);
-            return response()->json([
-                'success' => true,
-                'data'    => new PostResource($post)
-            ], 200);
-        } else {
+        Log::debug("DB operation OK");
+
+        if (empty($post)) {
             return response()->json([
                 'success'  => false,
                 'message' => 'Post not found'
-            ], 404);
+            ], 404);    
         }
+        
+        $post->loadCount(['comments']);
+
+        return response()->json([
+            'success' => true,
+            'data'    => new PostResource($post)
+        ], 200);
     }
 
     /**
@@ -104,7 +105,7 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(PostUpdateRequest $request, $id)
+    public function update($id, PostUpdateRequest $request)
     {
         $post = Post::find($id);
 
@@ -118,30 +119,28 @@ class PostController extends Controller
         if ($request->user()->cannot('update', $post)) {
             abort(403);
         }
+
         $validatedData = $request->validated();
-        $upload        = $request->file('upload');
-        
-        if (is_null($upload) || $post->file->diskSave($upload)) {
-            Log::debug("Updating DB...");
-            if (!empty($validatedData['body'])) {
-                $post->body = $validatedData['body'];
-            }
-            if (!empty($validatedData['latitude'])) {
-                $post->latitude = $validatedData['latitude'];
-            }
-            if (!empty($validatedData['longitude'])) {
-                $post->longitude = $validatedData['longitude'];
-            }
-            if (!empty($validatedData['visibility'])) {
-                $post->visibility_id = $validatedData['visibility'];
-            }
-            $post->save();
-            Log::debug("DB storage OK");
+
+        Log::debug("Updating post {$id} at DB...");
+        if (!empty($validatedData['title'])) {
+            $post->title = $validatedData['title'];
+        }
+        if (!empty($validatedData['body'])) {
+            $post->body = $validatedData['body'];
+        }
+        if (!empty($validatedData['status_id'])) {
+            $post->status_id = $validatedData['status_id'];
+        }
+
+        if ($post->save()) {
+            Log::debug("DB operation OK");
             return response()->json([
                 'success' => true,
                 'data'    => new PostResource($post)
             ], 200);
         } else {
+            Log::debug("DB operation ERROR");
             return response()->json([
                 'success'  => false,
                 'message' => 'Error uploading file'
@@ -155,7 +154,7 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         $post = Post::find($id);
 
@@ -169,12 +168,20 @@ class PostController extends Controller
         if ($request->user()->cannot('delete', $post)) {
             abort(403);
         }
-        $post->delete();
-        $post->file->diskDelete();
-        
-        return response()->json([
-            'success' => true,
-            'data'    => new PostResource($post)
-        ], 200);
+
+        Log::debug("Deleting post {$id} from DB...");
+        if ($post->delete()) {
+            Log::debug("DB operation OK");
+            return response()->json([
+                'success' => true,
+                'data'    => new PostResource($post)
+            ], 200);
+        } else {
+            Log::debug("DB operation ERROR");
+            return response()->json([
+                'success'  => false,
+                'message' => 'Error deleting file'
+            ], 500);
+        }
     }
 }

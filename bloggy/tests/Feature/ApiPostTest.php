@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\ApiTestCase;
-
+use PHPUnit\Framework\Attributes\Depends;
 use App\Models\User;
 use App\Models\Post;
 use App\Models\Status;
@@ -24,6 +24,7 @@ class ApiPostTest extends ApiTestCase
         // Invalid data
         $data = self::$validData;
         $data["body"] = "";
+        $data["status_id"] = 5;
         self::$invalidData = $data;
     }
 
@@ -71,103 +72,102 @@ class ApiPostTest extends ApiTestCase
         return $json->data;
     }
 
-    // public function test_post_create_error()
-    // {
-    //     Sanctum::actingAs(self::$testUser);
-    //     // Upload fake post using API web service
-    //     $response = $this->postJson("/api/posts", self::$invalidData );
-    //     // Check ERROR response
-    //     $this->_test_validation_error($response);
-    //     // Check validation errors
-    //     $response->assertInvalid(["body", "upload"]);
-    // }
+    public function test_post_create_error()
+    {
+        Sanctum::actingAs(self::$testUser);
+        // Upload fake post using API web service
+        $response = $this->postJson("/api/posts", self::$invalidData );
+        // Check ERROR response
+        $this->_test_validation_error($response);
+        // Check validation errors
+        $response->assertInvalid(["body", "status_id"]);
+    }
 
-    // /**
-    //  * #[Depends('test_post_create')]
-    //  */
-    // public function test_post_read(object $post)
-    // {
-    //     Sanctum::actingAs(self::$testUser);
-    //     // Read one post
-    //     $response = $this->getJson("/api/posts/{$post->id}");
-    //     // Check OK response
-    //     $this->_test_ok($response);
-    //     // Check JSON exact values
-    //     $response->assertJsonPath("data.body", 
-    //         fn ($body) => !empty($body)
-    //     );
-    // }
+    #[Depends('test_post_create')]
+    public function test_post_read(object $post)
+    {
+        // Read one post
+        $response = $this->getJson("/api/posts/{$post->id}");
+        // Check OK response
+        $this->_test_ok($response);
+        // Check JSON exact values
+        $response->assertJson(fn (AssertableJson $json) =>
+            $json->whereAllType([
+                'success' => 'boolean',
+                'data.id' => 'integer',
+                'data.title' => 'string',
+                'data.body' => 'string',
+                'data.author.name' => 'string',
+                'data.status.name' => 'string',
+            ])
+        );
+    }
     
-    // public function test_post_read_notfound()
-    // {
-    //     Sanctum::actingAs(self::$testUser);
-    //     // Check NOT FOUND scenario
-    //     $id = "not_exists";
-    //     $response = $this->getJson("/api/posts/{$id}");
-    //     $this->_test_notfound($response);
-    // }
+    public function test_post_read_notfound()
+    {
+        // Check NOT FOUND scenario
+        $id = "not_exists";
+        $response = $this->getJson("/api/posts/{$id}");
+        $this->_test_notfound($response);
+    }
 
-    // /**
-    //  * #[Depends('test_post_create')]
-    //  */
-    // public function test_post_update(object $post)
-    // {
-    //     Sanctum::actingAs(self::$testUser);
-    //     // Upload fake post using API web service
-    //     $data = self::$validData;
-    //     $data["body"] = "Updating body!";
-    //     $response = $this->putJson("/api/posts/{$post->id}", $data);
-    //     // Check OK response
-    //     $this->_test_ok($response);
-    //     // Check validation errors
-    //     $response->assertValid(["upload"]);
-    //     // Check JSON exact values
-    //     $response->assertJsonPath("data.body", $data["body"]);
-    // }
+    #[Depends('test_post_create')]
+    public function test_post_update(object $post)
+    {
+        Sanctum::actingAs(self::$testUser);
+        // Upload fake post using API web service
+        $data = self::$validData;
+        $data["body"] = "Updating body!";
+        $data["status_id"] = Status::DRAFT;
+        $response = $this->putJson("/api/posts/{$post->id}", $data);
+        // Check OK response
+        $this->_test_ok($response);
+        // Check validation errors
+        $response->assertValid(["body","status_id"]);
+        // Check JSON exact values
+        $response->assertJsonPath("data.body", $data["body"]);
+        $response->assertJsonPath("data.status.id", $data["status_id"]);
+    }
 
-    // /**
-    //  * #[Depends('test_post_create')]
-    //  */
-    // public function test_post_update_error(object $post)
-    // {
-    //     Sanctum::actingAs(self::$testUser);
-    //     // Upload fake post using API web service
-    //     $response = $this->putJson("/api/posts/{$post->id}", self::$invalidData);
-    //     // Check ERROR response
-    //     $this->_test_validation_error($response);
-    //     // Check validation errors
-    //     $response->assertInvalid(["body", "upload"]);
-    // }
+    #[Depends('test_post_create')]
+    public function test_post_update_error(object $post)
+    {
+        Sanctum::actingAs(self::$testUser);
+        // Upload fake post using API web service
+        $response = $this->putJson("/api/posts/{$post->id}", self::$invalidData);
+        // Check ERROR response
+        $this->_test_validation_error($response);
+        // Check validation errors
+        $response->assertInvalid(["status_id"]);
+    }
+    
+    public function test_post_update_notfound()
+    {
+        Sanctum::actingAs(self::$testUser);
+        // Check NOT FOUND scenario
+        $id = "not_exists";
+        $response = $this->putJson("/api/posts/{$id}", self::$validData);
+        $this->_test_notfound($response);
+    }
 
-    // public function test_post_update_notfound()
-    // {
-    //     Sanctum::actingAs(self::$testUser);
-    //     // Check NOT FOUND scenario
-    //     $id = "not_exists";
-    //     $response = $this->putJson("/api/posts/{$id}", self::$validData);
-    //     $this->_test_notfound($response);
-    // }
+    #[Depends('test_post_create')]
+    public function test_post_delete(object $post)
+    {
+        Sanctum::actingAs(self::$testUser);
+        // Delete one post using API web service
+        $response = $this->deleteJson("/api/posts/{$post->id}");
+        // Check OK response
+        $this->_test_ok($response);
+    }
 
-    // /**
-    //  * #[Depends('test_post_create')]
-    //  */
-    // public function test_post_delete(object $post)
-    // {
-    //     Sanctum::actingAs(self::$testUser);
-    //     // Delete one post using API web service
-    //     $response = $this->deleteJson("/api/posts/{$post->id}");
-    //     // Check OK response
-    //     $this->_test_ok($response);
-    // }
-
-    // public function test_post_delete_notfound()
-    // {
-    //     Sanctum::actingAs(self::$testUser);
-    //     // Check NOT FOUND scenario
-    //     $id = "not_exists";
-    //     $response = $this->deleteJson("/api/posts/{$id}");
-    //     $this->_test_notfound($response);
-    // }
+    public function test_post_delete_notfound()
+    {
+        Sanctum::actingAs(self::$testUser);
+        // Check NOT FOUND scenario
+        $id = "not_exists";
+        $response = $this->deleteJson("/api/posts/{$id}");
+        $this->_test_notfound($response);
+    }
 
     public function test_delete_post_author()
     {
