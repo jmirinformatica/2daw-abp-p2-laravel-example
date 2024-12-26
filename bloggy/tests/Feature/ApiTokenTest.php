@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
+use PHPUnit\Framework\Attributes\Depends;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -68,10 +68,8 @@ class ApiTokenTest extends TestCase
             fn ($errors) => is_array($errors)
         );
     }
-
-    /**
-     * #[Depends('test_register')]
-     */
+    
+    #[Depends('test_register')]
     public function test_login()
     {
         // Login using API web service
@@ -103,9 +101,7 @@ class ApiTokenTest extends TestCase
         $response->assertValid(["email","password"]);
     }
 
-    /**
-     * #[Depends('test_login')]
-     */
+    #[Depends('test_login')]
     public function test_logout()
     {
         $user = new User(self::$testUserData);
@@ -136,9 +132,7 @@ class ApiTokenTest extends TestCase
         ]);
     }
 
-    /**
-     * #[Depends('test_register')]
-     */
+    #[Depends('test_register')]
     public function test_user()
     {
         $user = new User(self::$testUserData);
