@@ -23,7 +23,7 @@ class PostSeeder extends Seeder
         ]);
 
         foreach($posts as $post) {
-            $nComments = rand(0,4);
+            $nComments = rand(0,15);
             for($i=0; $i<$nComments; $i++) {
                 Comment::factory()->create([
                     'post_id' => $post->id,

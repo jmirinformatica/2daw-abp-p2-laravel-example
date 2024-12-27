@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Log;
 
 use App\Models\Comment;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\CommentCollection;
 use App\Http\Requests\CommentStoreRequest;
-use App\Http\Resources\PaginateCollection;
 
 class CommentController extends Controller
 {
@@ -25,14 +25,15 @@ class CommentController extends Controller
             abort(403);
         }
 
+        Log::debug("Query post $pid comments at DB...");
         $query = Comment::where("post_id", "=", $pid);
+
+        // Pagination?
         $paginate = $request->query('paginate', 0);
         $data = $paginate ? $query->paginate() : $query->get();
         
-        return response()->json([
-            'success' => true,
-            'data'    => new PaginateCollection($data, CommentResource::class)
-        ], 200);
+        Log::debug("DB operation OK");
+        return new CommentCollection($data);
     }
 
     /**
@@ -58,51 +59,21 @@ class CommentController extends Controller
         if ($comment) {
             return response()->json([
                 'success'  => false,
-                'message' => 'Comment already created'
+                'message' => 'User has already commented this post'
             ], 400);
         } else {
             Log::debug("Saving comment at DB...");
             $comment = Comment::create([
-                "comment"    => $validatedData["comment"],
-                "post_id"  => $pid,
+                "comment"   => $validatedData["comment"],
+                "post_id"   => $pid,
                 "author_id" => auth()->user()->id,
             ]);
-            \Log::debug("DB storage OK");
+            \Log::debug("DB operation OK");
     
             return response()->json([
                 'success' => true,
                 'data'    => new CommentResource($comment)
             ], 201);
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $pid
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($pid, $id)
-    {
-        $comment = Comment::where([
-            ['id', '=', $id],
-            ['post_id', '=', $pid],
-        ])->first();
-        
-        if ($comment) {
-            if ($request->user()->cannot('view', $comment)) {
-                abort(403);
-            }
-            return response()->json([
-                'success' => true,
-                'data'    => $comment
-            ], 200);
-        } else {
-            return response()->json([
-                'success'  => false,
-                'message' => 'Comment not found'
-            ], 404);
         }
     }
 
@@ -113,16 +84,19 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($pid, $id)
+    public function destroy($pid, $id, Request $request)
     {
-        $comment = Comment::where([
-            ['id', '=', $id],
-            ['post_id', '=', $pid],
-        ])->first();
+        $comment = Comment::find($id);
 
         if ($comment) {
             if ($request->user()->cannot('delete', $comment)) {
                 abort(403);
+            }
+            if ($comment->post_id != $pid) {
+                return response()->json([
+                    'success'  => false,
+                    'message' => 'Comment and post mismatch'
+                ], 400);
             }
             $comment->delete();
             return response()->json([
