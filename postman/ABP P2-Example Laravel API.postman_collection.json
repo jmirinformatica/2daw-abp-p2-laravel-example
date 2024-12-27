@@ -1,0 +1,3424 @@
+{
+	"info": {
+		"_postman_id": "fdd532cf-66eb-483a-9aee-106f53ff06e6",
+		"name": "ABP P2-Example Laravel API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19399681",
+		"_collection_link": "https://insjoaquimmir-2daw.postman.co/workspace/Team-Workspace~23dd46ab-16d9-4c71-803f-deb4f76025b5/collection/19399681-fdd532cf-66eb-483a-9aee-106f53ff06e6?action=share&creator=19399681&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Token",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status OK\", function () {",
+									"    pm.response.to.be.ok;",
+									"})",
+									"",
+									"pm.test(\"JSON response\", function () {",
+									"    pm.response.to.be.json;",
+									"    pm.response.to.be.an(\"object\");",
+									"    pm.response.to.have.jsonBody(\"success\");",
+									"    pm.response.to.have.jsonBody(\"authToken\");",
+									"    pm.response.to.have.jsonBody(\"tokenType\");",
+									"    pm.response.to.not.have.jsonBody(\"error\");",
+									"});",
+									"",
+									"pm.test(\"JSON response: success\", function () {",
+									"    var jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+									"    pm.expect(jsonResponse.success).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"JSON response: authToken\", function () {",
+									"    var jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.authToken).to.be.a(\"string\");",
+									"    // Store last token to test other web services",
+									"    pm.collectionVariables.set(\"token\", jsonResponse.authToken);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/login",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/login",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 28 Feb 2024 16:59:44 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.52 (Ubuntu)"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"authToken\": \"156|xBGLUr4ZxQH2PWqxYANsOKZ3NvmD9gt4CWGsM1AYd23fe99a\",\n    \"tokenType\": \"Bearer\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Login INVALID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Unauthorized\", function () {",
+									"    pm.response.to.be.unauthorized;",
+									"})",
+									"",
+									"pm.test(\"JSON response\", function () {",
+									"    pm.response.to.be.json;",
+									"    pm.response.to.be.an(\"object\");",
+									"    pm.response.to.have.jsonBody(\"success\");",
+									"    pm.response.to.have.jsonBody(\"message\");",
+									"});",
+									"",
+									"pm.test(\"JSON response: success\", function () {",
+									"    var jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+									"    pm.expect(jsonResponse.success).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"JSON response: message\", function () {",
+									"    var jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.message).to.be.a(\"string\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}_WRONG\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/login",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Login INVALID",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}_WRONG\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/login",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"login"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 28 Feb 2024 09:23:39 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.52 (Ubuntu)"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"Invalid login credentials\"\n}"
+						}
+					]
+				},
+				{
+					"name": "User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status OK\", function () {",
+									"    pm.response.to.be.ok;",
+									"})",
+									"",
+									"pm.test(\"JSON response\", function () {",
+									"    pm.response.to.be.json;",
+									"    pm.response.to.be.an(\"object\");",
+									"    pm.response.to.have.jsonBody(\"user\");",
+									"    pm.response.to.not.have.jsonBody(\"error\");",
+									"});",
+									"",
+									"pm.test(\"JSON response: success\", function () {",
+									"    var jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+									"    pm.expect(jsonResponse.success).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"JSON response: user\", function () {",
+									"    var jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.user).to.be.an(\"object\");",
+									"    // Data",
+									"    pm.expect(jsonResponse.user).to.have.property(\"id\");",
+									"    pm.expect(jsonResponse.user).to.have.property(\"name\");",
+									"    pm.expect(jsonResponse.user).to.have.property(\"email\");",
+									"    pm.expect(jsonResponse.user).to.have.property(\"created_at\");",
+									"    pm.expect(jsonResponse.user).to.have.property(\"updated_at\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/user",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "User",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/user",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"user"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Dec 2022 18:58:56 GMT"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Dec 2022 18:58:56 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.1.11"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "59"
+								},
+								{
+									"key": "phpdebugbar-id",
+									"value": "X70a6934a5b7dd306fdd44f78caaeff7a"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"user\": {\n        \"id\": 173,\n        \"name\": \"pep.jimenez\",\n        \"email\": \"pep.jimenez@insjoaquimmir.cat\",\n        \"created_at\": \"2022-12-07T16:14:39.000000Z\",\n        \"updated_at\": \"2022-12-07T16:14:39.000000Z\"\n    },\n    \"role\": \"mapper\"\n}"
+						}
+					]
+				},
+				{
+					"name": "User UNAUTHENTICATED",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status Unauthorized\", function () {",
+									"    pm.response.to.be.unauthorized;",
+									"})",
+									"",
+									"pm.test(\"JSON response\", function () {",
+									"    pm.response.to.be.json;",
+									"    pm.response.to.be.an(\"object\");",
+									"    pm.response.to.have.jsonBody(\"message\");",
+									"});",
+									"",
+									"pm.test(\"JSON response: message\", function () {",
+									"    var jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.message).to.be.a(\"string\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/user",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "User UNAUTHORIZED",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/user",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"user"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 28 Feb 2024 09:25:24 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.52 (Ubuntu)"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Unauthenticated.\"\n}"
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Statuses",
+			"item": [
+				{
+					"name": "List statuses",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/statuses/",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"statuses",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "List statuses",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/statuses/",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"statuses",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.14"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 18 Dec 2024 09:48:47 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "phpdebugbar-id",
+									"value": "X8bb4b70b226a6c5c5d05d60f23f7145a"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"draft\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"published\"\n        },\n        {\n            \"id\": 3,\n            \"name\": \"hidden\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "CLRU Posts",
+					"item": [
+						{
+							"name": "Create post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status 201\", function () {",
+											"    pm.response.to.be.success;",
+											"    pm.response.to.have.status(201)",
+											"})",
+											"",
+											"pm.test(\"JSON response\", function () {",
+											"    pm.response.to.be.json;",
+											"    pm.response.to.be.an(\"object\");",
+											"    pm.response.to.have.jsonBody(\"success\");",
+											"    pm.response.to.have.jsonBody(\"data\");",
+											"    pm.response.to.not.have.jsonBody(\"error\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: success\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+											"    pm.expect(jsonResponse.success).to.eql(true);",
+											"});",
+											"",
+											"pm.test(\"JSON response: data\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.data).to.be.a(\"object\");",
+											"    // Store last id to test other web services",
+											"    pm.expect(jsonResponse.data).to.have.property(\"id\");",
+											"    pm.collectionVariables.set(\"post\", jsonResponse.data.id);",
+											"    // Data",
+											"    pm.expect(jsonResponse.data).to.have.property(\"title\");",
+											"    pm.expect(jsonResponse.data).to.have.property(\"body\");",
+											"    pm.expect(jsonResponse.data).to.have.property(\"created_at\");",
+											"    pm.expect(jsonResponse.data).to.have.property(\"updated_at\");",
+											"    // Relationships",
+											"    pm.expect(jsonResponse.data).to.have.any.key(\"status\",\"visibility_id\");",
+											"    pm.expect(jsonResponse.data).to.have.any.key(\"author\",\"author_id\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "title",
+											"value": "Super title",
+											"type": "text"
+										},
+										{
+											"key": "body",
+											"value": "My awesome body",
+											"type": "text"
+										},
+										{
+											"key": "status_id",
+											"value": "1",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Create post",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "title",
+													"value": "Super title",
+													"type": "text"
+												},
+												{
+													"key": "body",
+													"value": "My awesome body",
+													"type": "text"
+												},
+												{
+													"key": "status_id",
+													"value": "1",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.15"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 26 Dec 2024 07:59:42 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "phpdebugbar-id",
+											"value": "X63ee55dad4b2156be551b2434ee9c0a8"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": 10,\n        \"title\": \"Super title\",\n        \"body\": \"My awesome body\",\n        \"author\": {\n            \"id\": 2,\n            \"name\": \"blogger\",\n            \"email\": \"blogger@example.net\",\n            \"avatar\": \"http://127.0.0.1:8000/\",\n            \"created_at\": \"2024-12-26T07:42:38.000000Z\",\n            \"updated_at\": \"2024-12-26T07:42:38.000000Z\"\n        },\n        \"status\": {\n            \"id\": 1,\n            \"name\": \"draft\"\n        },\n        \"created_at\": \"2024-12-26T07:59:42.000000Z\",\n        \"updated_at\": \"2024-12-26T07:59:42.000000Z\",\n        \"commented\": false\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Create post INVALID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status 422\", function () {",
+											"    pm.response.to.have.status(422)",
+											"})",
+											"",
+											"pm.test(\"JSON response\", function () {",
+											"    pm.response.to.be.json;",
+											"    pm.response.to.be.an(\"object\");",
+											"    pm.response.to.have.jsonBody(\"message\");",
+											"    pm.response.to.have.jsonBody(\"errors\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: message\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.message).to.be.a(\"string\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: errors\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.errors).to.be.a(\"object\");",
+											"    pm.expect(jsonResponse.errors).to.have.keys(\"title\",\"body\",\"status_id\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "body",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "status_id",
+											"value": "5",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Create post INVALID",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "body",
+													"value": "",
+													"type": "text"
+												},
+												{
+													"key": "status_id",
+													"value": "5",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts"
+											]
+										}
+									},
+									"status": "Unprocessable Content",
+									"code": 422,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.15"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 26 Dec 2024 08:01:58 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "phpdebugbar-id",
+											"value": "X23d090bded9f38198455346996809b42"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"The title field is required. (and 2 more errors)\",\n    \"errors\": {\n        \"title\": [\n            \"The title field is required.\"\n        ],\n        \"body\": [\n            \"The body field is required.\"\n        ],\n        \"status_id\": [\n            \"The selected status id is invalid.\"\n        ]\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "List posts",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const dataSchema = {",
+											"    \"type\": \"array\",",
+											"    \"items\": [{",
+											"        \"type\": \"object\",",
+											"        \"properties\":{",
+											"            \"id\": {",
+											"                \"type\":\"integer\"",
+											"            },",
+											"            \"title\": {",
+											"                \"type\":\"string\"",
+											"            },",
+											"            \"body\": {",
+											"                \"type\":\"string\"",
+											"            },",
+											"            \"status_id\": {",
+											"                \"type\":\"integer\"",
+											"            },",
+											"            \"status\": {",
+											"                \"type\":\"object\"",
+											"            },",
+											"            \"author_id\": {",
+											"                \"type\":\"integer\"",
+											"            },",
+											"            \"author\": {",
+											"                \"type\":\"object\"",
+											"            },                        ",
+											"            \"created_at\": {",
+											"                \"type\":\"string\"",
+											"            },",
+											"            \"updated_at\": {",
+											"                \"type\":\"string\"",
+											"            }",
+											"        },",
+											"        \"required\": [",
+											"            \"id\",",
+											"            \"title\",",
+											"            \"body\",",
+											"        ]",
+											"    }]",
+											"};",
+											"",
+											"pm.test(\"Status OK\", function () {",
+											"    pm.response.to.be.ok;",
+											"})",
+											"",
+											"pm.test(\"JSON response\", function () {",
+											"    pm.response.to.be.json;",
+											"    pm.response.to.be.an(\"object\");",
+											"    pm.response.to.have.jsonBody(\"success\");",
+											"    pm.response.to.have.jsonBody(\"data\");",
+											"    pm.response.to.not.have.jsonBody(\"error\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: success\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+											"    pm.expect(jsonResponse.success).to.eql(true);",
+											"});",
+											"",
+											"pm.test(\"JSON response: data\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.data).to.be.an(\"array\");",
+											"    pm.expect(tv4.validate(jsonResponse.data, dataSchema)).to.be.true;",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "List posts",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 01 Mar 2024 11:58:56 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.52 (Ubuntu)"
+										},
+										{
+											"key": "Vary",
+											"value": "Authorization"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "X-RateLimit-Limit",
+											"value": "60"
+										},
+										{
+											"key": "X-RateLimit-Remaining",
+											"value": "59"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5, max=100"
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"id\": 1,\n            \"body\": \"sasasasasas\",\n            \"file\": {\n                \"id\": 8,\n                \"filepath\": \"uploads/1709145847_Captura de pantalla de 2024-02-14 17-32-02.png\",\n                \"filesize\": 194910,\n                \"created_at\": \"2024-02-27T18:02:06.000000Z\",\n                \"updated_at\": \"2024-02-28T18:44:07.000000Z\"\n            },\n            \"latitude\": 222,\n            \"longitude\": 222,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 7,\n                \"name\": \"Juan Perez\",\n                \"email\": \"algoar@fp.insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-26T18:51:22.000000Z\",\n                \"updated_at\": \"2024-02-26T18:51:22.000000Z\"\n            },\n            \"created_at\": \"2024-02-27T18:02:06.000000Z\",\n            \"updated_at\": \"2024-02-28T18:44:07.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 1,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 2,\n            \"body\": \"Descripción\",\n            \"file\": {\n                \"id\": 13,\n                \"filepath\": \"uploads/1709117684_titulo.jpg\",\n                \"filesize\": 80805,\n                \"created_at\": \"2024-02-28T10:54:44.000000Z\",\n                \"updated_at\": \"2024-02-28T10:54:44.000000Z\"\n            },\n            \"latitude\": 41.21829,\n            \"longitude\": 1.71192,\n            \"visibility\": {\n                \"id\": 3,\n                \"name\": \"private\"\n            },\n            \"author\": {\n                \"id\": 7,\n                \"name\": \"Juan Perez\",\n                \"email\": \"algoar@fp.insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-26T18:51:22.000000Z\",\n                \"updated_at\": \"2024-02-26T18:51:22.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T10:54:44.000000Z\",\n            \"updated_at\": \"2024-02-28T10:54:44.000000Z\",\n            \"likes_count\": 1,\n            \"comments_count\": 1,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 3,\n            \"body\": \"Hola caracola\",\n            \"file\": {\n                \"id\": 15,\n                \"filepath\": \"uploads/1709118809_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T11:13:29.000000Z\",\n                \"updated_at\": \"2024-02-28T11:13:29.000000Z\"\n            },\n            \"latitude\": 1.887,\n            \"longitude\": 0.444,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T11:13:29.000000Z\",\n            \"updated_at\": \"2024-02-28T11:13:29.000000Z\",\n            \"likes_count\": 1,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 4,\n            \"body\": \"Hola caracola\",\n            \"file\": {\n                \"id\": 16,\n                \"filepath\": \"uploads/1709118952_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T11:15:52.000000Z\",\n                \"updated_at\": \"2024-02-28T11:15:52.000000Z\"\n            },\n            \"latitude\": 1.887,\n            \"longitude\": 0.444,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T11:15:52.000000Z\",\n            \"updated_at\": \"2024-02-28T11:15:52.000000Z\",\n            \"likes_count\": 1,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 5,\n            \"body\": \"Hola caracola\",\n            \"file\": {\n                \"id\": 17,\n                \"filepath\": \"uploads/1709119010_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T11:16:50.000000Z\",\n                \"updated_at\": \"2024-02-28T11:16:50.000000Z\"\n            },\n            \"latitude\": 1.887,\n            \"longitude\": 0.444,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T11:16:50.000000Z\",\n            \"updated_at\": \"2024-02-28T11:16:50.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 6,\n            \"body\": \"Hola caracola\",\n            \"file\": {\n                \"id\": 18,\n                \"filepath\": \"uploads/1709119020_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T11:17:00.000000Z\",\n                \"updated_at\": \"2024-02-28T11:17:00.000000Z\"\n            },\n            \"latitude\": 1.887,\n            \"longitude\": 0.444,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T11:17:00.000000Z\",\n            \"updated_at\": \"2024-02-28T11:17:00.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 7,\n            \"body\": \"Hola caracola\",\n            \"file\": {\n                \"id\": 19,\n                \"filepath\": \"uploads/1709119061_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T11:17:41.000000Z\",\n                \"updated_at\": \"2024-02-28T11:17:41.000000Z\"\n            },\n            \"latitude\": 1.887,\n            \"longitude\": 0.444,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T11:17:41.000000Z\",\n            \"updated_at\": \"2024-02-28T11:17:41.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 8,\n            \"body\": \"Hola caracola\",\n            \"file\": {\n                \"id\": 20,\n                \"filepath\": \"uploads/1709119083_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T11:18:03.000000Z\",\n                \"updated_at\": \"2024-02-28T11:18:03.000000Z\"\n            },\n            \"latitude\": 1.887,\n            \"longitude\": 0.444,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T11:18:03.000000Z\",\n            \"updated_at\": \"2024-02-28T11:18:03.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 9,\n            \"body\": \"Hola caracola\",\n            \"file\": {\n                \"id\": 21,\n                \"filepath\": \"uploads/1709119130_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T11:18:50.000000Z\",\n                \"updated_at\": \"2024-02-28T11:18:50.000000Z\"\n            },\n            \"latitude\": 1.887,\n            \"longitude\": 0.444,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T11:18:50.000000Z\",\n            \"updated_at\": \"2024-02-28T11:18:50.000000Z\",\n            \"likes_count\": 1,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 10,\n            \"body\": \"Hola caracola\",\n            \"file\": {\n                \"id\": 22,\n                \"filepath\": \"uploads/1709119271_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T11:21:11.000000Z\",\n                \"updated_at\": \"2024-02-28T11:21:11.000000Z\"\n            },\n            \"latitude\": 1.887,\n            \"longitude\": 0.444,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T11:21:11.000000Z\",\n            \"updated_at\": \"2024-02-28T11:21:11.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 11,\n            \"body\": \"Hola caracola\",\n            \"file\": {\n                \"id\": 23,\n                \"filepath\": \"uploads/1709119298_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T11:21:38.000000Z\",\n                \"updated_at\": \"2024-02-28T11:21:38.000000Z\"\n            },\n            \"latitude\": 1.887,\n            \"longitude\": 0.444,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T11:21:38.000000Z\",\n            \"updated_at\": \"2024-02-28T11:21:38.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 12,\n            \"body\": \"Hola caracola\",\n            \"file\": {\n                \"id\": 24,\n                \"filepath\": \"uploads/1709119422_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T11:23:42.000000Z\",\n                \"updated_at\": \"2024-02-28T11:23:42.000000Z\"\n            },\n            \"latitude\": 1.887,\n            \"longitude\": 0.444,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T11:23:42.000000Z\",\n            \"updated_at\": \"2024-02-28T11:23:42.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 13,\n            \"body\": \"Hola caracola\",\n            \"file\": {\n                \"id\": 25,\n                \"filepath\": \"uploads/1709119499_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T11:24:59.000000Z\",\n                \"updated_at\": \"2024-02-28T11:24:59.000000Z\"\n            },\n            \"latitude\": 1.887,\n            \"longitude\": 0.444,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T11:24:59.000000Z\",\n            \"updated_at\": \"2024-02-28T11:24:59.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 14,\n            \"body\": \"Hola caracola\",\n            \"file\": {\n                \"id\": 26,\n                \"filepath\": \"uploads/1709119509_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T11:25:09.000000Z\",\n                \"updated_at\": \"2024-02-28T11:25:09.000000Z\"\n            },\n            \"latitude\": 1.887,\n            \"longitude\": 0.444,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T11:25:09.000000Z\",\n            \"updated_at\": \"2024-02-28T11:25:09.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 15,\n            \"body\": \"Hola caracola\",\n            \"file\": {\n                \"id\": 27,\n                \"filepath\": \"uploads/1709119528_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T11:25:28.000000Z\",\n                \"updated_at\": \"2024-02-28T11:25:28.000000Z\"\n            },\n            \"latitude\": 1.887,\n            \"longitude\": 0.444,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T11:25:28.000000Z\",\n            \"updated_at\": \"2024-02-28T11:25:28.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 17,\n            \"body\": \"Hola caracola\",\n            \"file\": {\n                \"id\": 32,\n                \"filepath\": \"uploads/1709122589_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T12:16:29.000000Z\",\n                \"updated_at\": \"2024-02-28T12:16:29.000000Z\"\n            },\n            \"latitude\": 1.887,\n            \"longitude\": 0.444,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T12:16:29.000000Z\",\n            \"updated_at\": \"2024-02-28T12:16:29.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 25,\n            \"body\": \"Holaaaaaaaaaa\",\n            \"file\": {\n                \"id\": 44,\n                \"filepath\": \"uploads/1709145151_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T18:32:31.000000Z\",\n                \"updated_at\": \"2024-02-28T18:32:31.000000Z\"\n            },\n            \"latitude\": 1.666,\n            \"longitude\": 0.222,\n            \"visibility\": {\n                \"id\": 2,\n                \"name\": \"contacts\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T18:32:31.000000Z\",\n            \"updated_at\": \"2024-02-28T18:33:37.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 1,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 32,\n            \"body\": \"Holaaaaaaaaaa\",\n            \"file\": {\n                \"id\": 59,\n                \"filepath\": \"uploads/1709146921_Captura de pantalla de 2023-01-24 19-07-33.png\",\n                \"filesize\": 68124,\n                \"created_at\": \"2024-02-28T19:02:01.000000Z\",\n                \"updated_at\": \"2024-02-28T19:02:01.000000Z\"\n            },\n            \"latitude\": 1.666,\n            \"longitude\": 0.111,\n            \"visibility\": {\n                \"id\": 2,\n                \"name\": \"contacts\"\n            },\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"pep\",\n                \"email\": \"pep.castelltort@insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-27T18:20:08.000000Z\",\n                \"updated_at\": \"2024-02-27T18:20:08.000000Z\"\n            },\n            \"created_at\": \"2024-02-28T19:02:01.000000Z\",\n            \"updated_at\": \"2024-02-28T19:03:50.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 34,\n            \"body\": \"Mewing on the house. att alex gi\",\n            \"file\": {\n                \"id\": 63,\n                \"filepath\": \"uploads/1709221796_main-qimg-75585b626d90a4d22588b5a0ba25ac7b-lq.jpeg\",\n                \"filesize\": 31178,\n                \"created_at\": \"2024-02-29T15:49:56.000000Z\",\n                \"updated_at\": \"2024-02-29T15:49:56.000000Z\"\n            },\n            \"latitude\": 41.23126,\n            \"longitude\": 1.7285300000000001,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 8,\n                \"name\": \"cristian martinez\",\n                \"email\": \"crmagu@fp.insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-26T18:56:46.000000Z\",\n                \"updated_at\": \"2024-02-26T18:56:46.000000Z\"\n            },\n            \"created_at\": \"2024-02-29T15:49:56.000000Z\",\n            \"updated_at\": \"2024-02-29T15:49:56.000000Z\",\n            \"likes_count\": 1,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        },\n        {\n            \"id\": 38,\n            \"body\": \"asdasdasdasdasd asdasdsad asdasdasdasd\",\n            \"file\": {\n                \"id\": 73,\n                \"filepath\": \"uploads/1709229852_mewing.jpeg\",\n                \"filesize\": 31178,\n                \"created_at\": \"2024-02-29T18:04:12.000000Z\",\n                \"updated_at\": \"2024-02-29T18:04:12.000000Z\"\n            },\n            \"latitude\": 41.236,\n            \"longitude\": 1.7252999999999998,\n            \"visibility\": {\n                \"id\": 1,\n                \"name\": \"public\"\n            },\n            \"author\": {\n                \"id\": 8,\n                \"name\": \"cristian martinez\",\n                \"email\": \"crmagu@fp.insjoaquimmir.cat\",\n                \"created_at\": \"2024-02-26T18:56:46.000000Z\",\n                \"updated_at\": \"2024-02-26T18:56:46.000000Z\"\n            },\n            \"created_at\": \"2024-02-29T18:04:12.000000Z\",\n            \"updated_at\": \"2024-02-29T18:04:12.000000Z\",\n            \"likes_count\": 0,\n            \"comments_count\": 0,\n            \"liked\": false,\n            \"commented\": false\n        }\n    ]\n}"
+								}
+							]
+						},
+						{
+							"name": "List posts (query)",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts?paginate=1&status_id=1",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts"
+									],
+									"query": [
+										{
+											"key": "paginate",
+											"value": "1"
+										},
+										{
+											"key": "status_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "List posts (query)",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts?paginate=1&status_id=1",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts"
+											],
+											"query": [
+												{
+													"key": "paginate",
+													"value": "1"
+												},
+												{
+													"key": "status_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.6"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 18 Dec 2024 17:07:28 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "phpdebugbar-id",
+											"value": "Xdfa656b033804daba5ab17c035c6b989"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"id\": 1,\n            \"title\": \"Numquam necessitatibus commodi similique.\",\n            \"body\": \"I'll tell you what year it is?' 'Of course it is,' said the Gryphon: 'I went to school in the court!' and the turtles all advance! They are waiting on the same thing as \\\"I eat what I was a good opportunity for making her escape; so she waited. The.\",\n            \"author\": {\n                \"id\": 13,\n                \"name\": \"Prof. Eleanora Hills Sr.\",\n                \"email\": \"schiller.maci@example.com\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:52:31.000000Z\",\n                \"updated_at\": \"2024-12-18T16:52:31.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"updated_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"comments_count\": 4\n        },\n        {\n            \"id\": 2,\n            \"title\": \"Sed repellat unde.\",\n            \"body\": \"Alice thought she might as well to introduce some other subject of conversation. 'Are you--are you fond--of--of dogs?' The Mouse did not dare to disobey, though she felt unhappy. 'It was the BEST butter,' the March Hare said--' 'I didn't!' the.\",\n            \"author\": {\n                \"id\": 13,\n                \"name\": \"Prof. Eleanora Hills Sr.\",\n                \"email\": \"schiller.maci@example.com\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:52:31.000000Z\",\n                \"updated_at\": \"2024-12-18T16:52:31.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"updated_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"comments_count\": 3\n        },\n        {\n            \"id\": 3,\n            \"title\": \"Ducimus numquam nihil repudiandae tempora.\",\n            \"body\": \"King. 'I can't explain it,' said Alice. 'I mean what I could show you our cat Dinah: I think it would be very likely true.) Down, down, down. There was not a regular rule: you invented it just grazed his nose, you know?' 'It's the stupidest.\",\n            \"author\": {\n                \"id\": 13,\n                \"name\": \"Prof. Eleanora Hills Sr.\",\n                \"email\": \"schiller.maci@example.com\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:52:31.000000Z\",\n                \"updated_at\": \"2024-12-18T16:52:31.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"updated_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"comments_count\": 0\n        },\n        {\n            \"id\": 4,\n            \"title\": \"Ab qui ea fugit sit.\",\n            \"body\": \"Gryphon hastily. 'Go on with the next witness.' And he added looking angrily at the thought that it was only sobbing,' she thought, and looked anxiously round, to make it stop. 'Well, I'd hardly finished the guinea-pigs!' thought Alice. 'I mean.\",\n            \"author\": {\n                \"id\": 13,\n                \"name\": \"Prof. Eleanora Hills Sr.\",\n                \"email\": \"schiller.maci@example.com\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:52:31.000000Z\",\n                \"updated_at\": \"2024-12-18T16:52:31.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"updated_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"comments_count\": 2\n        },\n        {\n            \"id\": 5,\n            \"title\": \"Est id numquam laudantium.\",\n            \"body\": \"Caterpillar decidedly, and there she saw them, they were playing the Queen was close behind us, and he's treading on her lap as if nothing had happened. 'How am I to get us dry would be offended again. 'Mine is a very long silence, broken only by.\",\n            \"author\": {\n                \"id\": 19,\n                \"name\": \"Dr. Cesar Kohler\",\n                \"email\": \"dcorwin@example.org\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n                \"updated_at\": \"2024-12-18T16:52:32.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"updated_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"comments_count\": 0\n        },\n        {\n            \"id\": 6,\n            \"title\": \"Enim nihil maxime blanditiis.\",\n            \"body\": \"The Footman seemed to be talking in a tone of this pool? I am in the other. 'I beg your pardon,' said Alice indignantly, and she soon made out the words: 'Where's the other side will make you grow shorter.' 'One side of WHAT?' thought Alice to.\",\n            \"author\": {\n                \"id\": 21,\n                \"name\": \"Dr. Anibal Kulas PhD\",\n                \"email\": \"athena91@example.org\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n                \"updated_at\": \"2024-12-18T16:52:32.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"updated_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"comments_count\": 0\n        },\n        {\n            \"id\": 7,\n            \"title\": \"Cum officia minima nam.\",\n            \"body\": \"Alice could hear him sighing as if she meant to take the roof of the March Hare interrupted in a very small cake, on which the cook was leaning over the fire, and at once took up the little crocodile Improve his shining tail, And pour the waters of.\",\n            \"author\": {\n                \"id\": 23,\n                \"name\": \"Miss Ottilie Jerde\",\n                \"email\": \"isabella.kshlerin@example.com\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n                \"updated_at\": \"2024-12-18T16:52:32.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"updated_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"comments_count\": 0\n        },\n        {\n            \"id\": 8,\n            \"title\": \"Ducimus beatae doloribus ad.\",\n            \"body\": \"Alice, whose thoughts were still running on the Duchess's cook. She carried the pepper-box in her hands, and was delighted to find that her neck would bend about easily in any direction, like a wild beast, screamed 'Off with their heads!' and the.\",\n            \"author\": {\n                \"id\": 25,\n                \"name\": \"Korey Sauer\",\n                \"email\": \"autumn40@example.net\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n                \"updated_at\": \"2024-12-18T16:52:32.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"updated_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"comments_count\": 0\n        },\n        {\n            \"id\": 9,\n            \"title\": \"Voluptates vitae expedita ex.\",\n            \"body\": \"WHAT?' thought Alice 'without pictures or conversations in it, and they repeated their arguments to her, one on each side, and opened their eyes and mouths so VERY wide, but she could remember about ravens and writing-desks, which wasn't much. The.\",\n            \"author\": {\n                \"id\": 27,\n                \"name\": \"Katelynn Bruen DVM\",\n                \"email\": \"angelo68@example.org\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n                \"updated_at\": \"2024-12-18T16:52:32.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"updated_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"comments_count\": 0\n        },\n        {\n            \"id\": 10,\n            \"title\": \"Tempora ex libero corporis rerum.\",\n            \"body\": \"Gryphon. '--you advance twice--' 'Each with a round face, and was suppressed. 'Come, that finished the goose, with the other side of the Lobster Quadrille, that she knew she had read about them in books, and she did not answer, so Alice ventured to.\",\n            \"author\": {\n                \"id\": 29,\n                \"name\": \"Brooklyn Ullrich\",\n                \"email\": \"layla21@example.com\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n                \"updated_at\": \"2024-12-18T16:52:32.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"updated_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"comments_count\": 0\n        },\n        {\n            \"id\": 11,\n            \"title\": \"Corrupti numquam dolor voluptas.\",\n            \"body\": \"It doesn't look like it?' he said. 'Fifteenth,' said the Duchess: 'and the moral of that is--\\\"The more there is of finding morals in things!' Alice began to repeat it, but her head pressing against the ceiling, and had to fall upon Alice, as she.\",\n            \"author\": {\n                \"id\": 31,\n                \"name\": \"Janessa McLaughlin\",\n                \"email\": \"lesch.viva@example.net\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n                \"updated_at\": \"2024-12-18T16:52:32.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"updated_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"comments_count\": 0\n        },\n        {\n            \"id\": 12,\n            \"title\": \"Molestias omnis odio sapiente voluptatum voluptas.\",\n            \"body\": \"VERY unpleasant state of mind, she turned away. 'Come back!' the Caterpillar seemed to think that very few little girls of her favourite word 'moral,' and the poor little thing was snorting like a tunnel for some while in silence. At last the Dodo.\",\n            \"author\": {\n                \"id\": 33,\n                \"name\": \"Brandi Swift\",\n                \"email\": \"gleichner.arlie@example.net\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n                \"updated_at\": \"2024-12-18T16:52:32.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"updated_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"comments_count\": 0\n        },\n        {\n            \"id\": 13,\n            \"title\": \"Velit voluptates laboriosam ab excepturi.\",\n            \"body\": \"I am in the window, she suddenly spread out her hand again, and did not see anything that had a large one, but it was a very difficult question. However, at last the Mock Turtle said: 'no wise fish would go round a deal too far off to the.\",\n            \"author\": {\n                \"id\": 35,\n                \"name\": \"Prof. Buster Douglas MD\",\n                \"email\": \"auer.rebecca@example.net\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n                \"updated_at\": \"2024-12-18T16:52:32.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"updated_at\": \"2024-12-18T16:52:32.000000Z\",\n            \"comments_count\": 0\n        },\n        {\n            \"id\": 14,\n            \"title\": \"In reprehenderit ut sit.\",\n            \"body\": \"Fish-Footman was gone, and the pool as it was out of a book,' thought Alice to herself, as she did not dare to disobey, though she looked at the top of his head. But at any rate: go and live in that poky little house, and the three gardeners, but.\",\n            \"author\": {\n                \"id\": 36,\n                \"name\": \"Kayley Olson\",\n                \"email\": \"koss.johnpaul@example.net\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:59:35.000000Z\",\n                \"updated_at\": \"2024-12-18T16:59:35.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:59:35.000000Z\",\n            \"updated_at\": \"2024-12-18T16:59:35.000000Z\",\n            \"comments_count\": 4\n        },\n        {\n            \"id\": 15,\n            \"title\": \"Distinctio aliquid est omnis rem.\",\n            \"body\": \"Dormouse. 'Write that down,' the King put on her spectacles, and began smoking again. This time Alice waited a little, and then turned to the Gryphon. 'It's all about it!' Last came a rumbling of little animals and birds waiting outside. The poor.\",\n            \"author\": {\n                \"id\": 36,\n                \"name\": \"Kayley Olson\",\n                \"email\": \"koss.johnpaul@example.net\",\n                \"avatar\": \"http://127.0.0.1:8000/\",\n                \"created_at\": \"2024-12-18T16:59:35.000000Z\",\n                \"updated_at\": \"2024-12-18T16:59:35.000000Z\"\n            },\n            \"status\": {\n                \"id\": 2,\n                \"name\": \"published\"\n            },\n            \"created_at\": \"2024-12-18T16:59:35.000000Z\",\n            \"updated_at\": \"2024-12-18T16:59:35.000000Z\",\n            \"comments_count\": 4\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://127.0.0.1:8000/api/posts?page=1\",\n        \"last\": \"http://127.0.0.1:8000/api/posts?page=6\",\n        \"prev\": null,\n        \"next\": \"http://127.0.0.1:8000/api/posts?page=2\"\n    },\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": 1,\n        \"last_page\": 6,\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"active\": false\n            },\n            {\n                \"url\": \"http://127.0.0.1:8000/api/posts?page=1\",\n                \"label\": \"1\",\n                \"active\": true\n            },\n            {\n                \"url\": \"http://127.0.0.1:8000/api/posts?page=2\",\n                \"label\": \"2\",\n                \"active\": false\n            },\n            {\n                \"url\": \"http://127.0.0.1:8000/api/posts?page=3\",\n                \"label\": \"3\",\n                \"active\": false\n            },\n            {\n                \"url\": \"http://127.0.0.1:8000/api/posts?page=4\",\n                \"label\": \"4\",\n                \"active\": false\n            },\n            {\n                \"url\": \"http://127.0.0.1:8000/api/posts?page=5\",\n                \"label\": \"5\",\n                \"active\": false\n            },\n            {\n                \"url\": \"http://127.0.0.1:8000/api/posts?page=6\",\n                \"label\": \"6\",\n                \"active\": false\n            },\n            {\n                \"url\": \"http://127.0.0.1:8000/api/posts?page=2\",\n                \"label\": \"Next &raquo;\",\n                \"active\": false\n            }\n        ],\n        \"path\": \"http://127.0.0.1:8000/api/posts\",\n        \"per_page\": 15,\n        \"to\": 15,\n        \"total\": 88\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Read post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status OK\", function () {",
+											"    pm.response.to.be.ok;",
+											"})",
+											"",
+											"pm.test(\"JSON response\", function () {",
+											"    pm.response.to.be.json;",
+											"    pm.response.to.be.an(\"object\");",
+											"    pm.response.to.have.jsonBody(\"success\");",
+											"    pm.response.to.have.jsonBody(\"data\");",
+											"    pm.response.to.not.have.jsonBody(\"error\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: success\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+											"    pm.expect(jsonResponse.success).to.eql(true);",
+											"});",
+											"",
+											"pm.test(\"JSON response: data\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.data).to.be.a(\"object\");",
+											"    // Data",
+											"    pm.expect(jsonResponse.data).to.have.property(\"id\");",
+											"    pm.expect(jsonResponse.data).to.have.property(\"title\");",
+											"    pm.expect(jsonResponse.data).to.have.property(\"body\");",
+											"    pm.expect(jsonResponse.data).to.have.property(\"created_at\");",
+											"    pm.expect(jsonResponse.data).to.have.property(\"updated_at\");",
+											"    // Relationships",
+											"    pm.expect(jsonResponse.data).to.have.any.key(\"status\",\"status_id\");",
+											"    pm.expect(jsonResponse.data).to.have.any.key(\"author\",\"author_id\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{{post}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Read post",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts",
+												"{{post}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.15"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 26 Dec 2024 08:03:05 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "phpdebugbar-id",
+											"value": "X428a31be760b3a8bf6c1e86cf2b98fb4"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": 10,\n        \"title\": \"Super title\",\n        \"body\": \"My awesome body\",\n        \"author\": {\n            \"id\": 2,\n            \"name\": \"blogger\",\n            \"email\": \"blogger@example.net\",\n            \"avatar\": \"http://127.0.0.1:8000/\",\n            \"created_at\": \"2024-12-26T07:42:38.000000Z\",\n            \"updated_at\": \"2024-12-26T07:42:38.000000Z\"\n        },\n        \"status\": {\n            \"id\": 1,\n            \"name\": \"draft\"\n        },\n        \"created_at\": \"2024-12-26T07:59:42.000000Z\",\n        \"updated_at\": \"2024-12-26T07:59:42.000000Z\",\n        \"comments_count\": 0\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Read post NOT FOUND",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status 404\", function () {",
+											"    pm.response.to.be.notFound;",
+											"})",
+											"",
+											"pm.test(\"JSON response\", function () {",
+											"    pm.response.to.be.json;",
+											"    pm.response.to.be.an(\"object\");",
+											"    pm.response.to.have.jsonBody(\"success\");",
+											"    pm.response.to.have.jsonBody(\"message\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: success\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+											"    pm.expect(jsonResponse.success).to.eql(false);",
+											"});",
+											"",
+											"pm.test(\"JSON response: message\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.message).to.be.a(\"string\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts/{{NOT_EXISTS}}",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{{NOT_EXISTS}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Read post NOT FOUND",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts/{{NOT_EXISTS}}",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts",
+												"{{NOT_EXISTS}}"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 28 Feb 2024 11:55:59 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.52 (Ubuntu)"
+										},
+										{
+											"key": "Vary",
+											"value": "Authorization"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "X-RateLimit-Limit",
+											"value": "60"
+										},
+										{
+											"key": "X-RateLimit-Remaining",
+											"value": "59"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5, max=100"
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": false,\n    \"message\": \"Post not found\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Update post",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status OK\", function () {",
+											"    pm.response.to.be.ok;",
+											"})",
+											"",
+											"pm.test(\"JSON response\", function () {",
+											"    pm.response.to.be.json;",
+											"    pm.response.to.be.an(\"object\");",
+											"    pm.response.to.have.jsonBody(\"success\");",
+											"    pm.response.to.have.jsonBody(\"data\");",
+											"    pm.response.to.not.have.jsonBody(\"error\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: success\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+											"    pm.expect(jsonResponse.success).to.eql(true);",
+											"});",
+											"",
+											"pm.test(\"JSON response: data\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.data).to.be.a(\"object\");",
+											"    // Data",
+											"    pm.expect(jsonResponse.data).to.have.property(\"id\");",
+											"    pm.expect(jsonResponse.data).to.have.property(\"title\");",
+											"    pm.expect(jsonResponse.data).to.have.property(\"body\");",
+											"    pm.expect(jsonResponse.data).to.have.property(\"created_at\");",
+											"    pm.expect(jsonResponse.data).to.have.property(\"updated_at\");",
+											"    // Relationships",
+											"    pm.expect(jsonResponse.data).to.have.any.key(\"status\",\"status_id\");",
+											"    pm.expect(jsonResponse.data).to.have.any.key(\"author\",\"author_id\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: data updated\", function () {",
+											"    var jsonResponseData = pm.response.json().data;",
+											"    var jsonRequestBody = JSON.parse(pm.request.body.raw);",
+											"    pm.expect(jsonResponseData.body).equal(jsonRequestBody.body);",
+											"    pm.expect(jsonResponseData.status.id).equal(jsonRequestBody.status_id);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"body\": \"My new body\",\n    \"status_id\": 2\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{{post}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Update post",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"body\": \"My new body\",\n    \"status_id\": 2\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts",
+												"{{post}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.15"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 26 Dec 2024 08:28:19 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "phpdebugbar-id",
+											"value": "X3b8c3cd93cff933c498dbb0ec22a5e1c"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": 10,\n        \"title\": \"Super title\",\n        \"body\": \"My new body\",\n        \"author\": {\n            \"id\": 2,\n            \"name\": \"blogger\",\n            \"email\": \"blogger@example.net\",\n            \"avatar\": \"http://127.0.0.1:8000/\",\n            \"created_at\": \"2024-12-26T07:42:38.000000Z\",\n            \"updated_at\": \"2024-12-26T07:42:38.000000Z\"\n        },\n        \"status\": {\n            \"id\": 2,\n            \"name\": \"published\"\n        },\n        \"created_at\": \"2024-12-26T07:59:42.000000Z\",\n        \"updated_at\": \"2024-12-26T08:28:19.000000Z\",\n        \"commented\": false\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Update post INVALID",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status 422\", function () {",
+											"    pm.response.to.have.status(422)",
+											"})",
+											"",
+											"pm.test(\"JSON response\", function () {",
+											"    pm.response.to.be.json;",
+											"    pm.response.to.be.an(\"object\");",
+											"    pm.response.to.have.jsonBody(\"message\");",
+											"    pm.response.to.have.jsonBody(\"errors\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: message\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.message).to.be.a(\"string\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: errors\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.errors).to.be.a(\"object\");",
+											"    pm.expect(jsonResponse.errors).to.have.key(\"status_id\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status_id\": 5\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{{post}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Update post INVALID",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"status_id\": 5\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts",
+												"{{post}}"
+											]
+										}
+									},
+									"status": "Unprocessable Content",
+									"code": 422,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.15"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 26 Dec 2024 08:30:35 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "phpdebugbar-id",
+											"value": "X435ed729ae458a1738d46385d0d5bc73"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"The selected status id is invalid.\",\n    \"errors\": {\n        \"status_id\": [\n            \"The selected status id is invalid.\"\n        ]\n    }\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Comments",
+					"item": [
+						{
+							"name": "Create comment",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status 201\", function () {",
+											"    pm.response.to.be.success;",
+											"    pm.response.to.have.status(201)",
+											"})",
+											"",
+											"pm.test(\"JSON response\", function () {",
+											"    pm.response.to.be.json;",
+											"    pm.response.to.be.an(\"object\");",
+											"    pm.response.to.have.jsonBody(\"success\");",
+											"    pm.response.to.have.jsonBody(\"data\");",
+											"    pm.response.to.not.have.jsonBody(\"error\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: success\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+											"    pm.expect(jsonResponse.success).to.eql(true);",
+											"});",
+											"",
+											"pm.test(\"JSON response: data\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.data).to.be.a(\"object\");",
+											"    // Store last id to test other web services",
+											"    pm.expect(jsonResponse.data).to.have.property(\"id\");",
+											"    pm.collectionVariables.set(\"comment\", jsonResponse.data.id);",
+											"    // Data",
+											"    pm.expect(jsonResponse.data).to.have.property(\"comment\");",
+											"    // Relationships",
+											"    pm.expect(jsonResponse.data).to.have.any.key(\"user\",\"user_id\",\"author\",\"author_id\");",
+											"    pm.expect(jsonResponse.data).to.have.any.key(\"post\",\"post_id\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"comment\": \"This post is great!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}/comments",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{{post}}",
+										"comments"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Create comment",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"comment\": \"This post is great!\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}/comments",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts",
+												"{{post}}",
+												"comments"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.15"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 27 Dec 2024 11:05:01 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "phpdebugbar-id",
+											"value": "Xacac28dfb3332ef54d0de67d45d34185"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": 5,\n        \"comment\": \"This post is great!\",\n        \"user\": {\n            \"id\": 2,\n            \"name\": \"blogger\",\n            \"email\": \"blogger@example.net\",\n            \"created_at\": \"2024-12-26T07:42:38.000000Z\",\n            \"updated_at\": \"2024-12-26T07:42:38.000000Z\"\n        },\n        \"post\": {\n            \"id\": 34,\n            \"title\": \"Super title\",\n            \"body\": \"My awesome body\",\n            \"author\": {\n                \"id\": 2,\n                \"name\": \"blogger\",\n                \"email\": \"blogger@example.net\",\n                \"created_at\": \"2024-12-26T07:42:38.000000Z\",\n                \"updated_at\": \"2024-12-26T07:42:38.000000Z\"\n            },\n            \"status\": {\n                \"id\": 1,\n                \"name\": \"draft\"\n            },\n            \"created_at\": \"2024-12-27T11:04:54.000000Z\",\n            \"updated_at\": \"2024-12-27T11:04:54.000000Z\",\n            \"commented\": true\n        },\n        \"created_at\": \"2024-12-27T11:05:01.000000Z\",\n        \"updated_at\": \"2024-12-27T11:05:01.000000Z\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Create comment ERROR",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status 400\", function () {",
+											"    pm.response.to.be.badRequest;",
+											"})",
+											"",
+											"pm.test(\"JSON response\", function () {",
+											"    pm.response.to.be.json;",
+											"    pm.response.to.be.an(\"object\");",
+											"    pm.response.to.have.jsonBody(\"success\");",
+											"    pm.response.to.have.jsonBody(\"message\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: success\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+											"    pm.expect(jsonResponse.success).to.eql(false);",
+											"});",
+											"",
+											"pm.test(\"JSON response: message\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.message).to.be.a(\"string\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"comment\": \"This post is great!\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}/comments",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{{post}}",
+										"comments"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Create comment ERROR",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"comment\": \"This post is great!\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}/comments",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts",
+												"{{post}}",
+												"comments"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.15"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 27 Dec 2024 11:05:42 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "phpdebugbar-id",
+											"value": "X00b93295293a9652c15cfe65ec9de7a6"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": false,\n    \"message\": \"User has already commented this post\"\n}"
+								}
+							]
+						},
+						{
+							"name": "List comments",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const dataSchema = {",
+											"    \"type\": \"array\",",
+											"    \"items\": [{",
+											"        \"type\": \"object\",",
+											"        \"properties\":{",
+											"            \"id\": {",
+											"                \"type\":\"integer\"",
+											"            },",
+											"            \"comment\": {",
+											"                \"type\":\"string\"",
+											"            },",
+											"            \"post_id\": {",
+											"                \"type\":\"integer\"",
+											"            },",
+											"            \"post\": {",
+											"                \"type\":\"object\"",
+											"            },",
+											"            \"user_id\": {",
+											"                \"type\":\"integer\"",
+											"            },",
+											"            \"user\": {",
+											"                \"type\":\"object\"",
+											"            },",
+											"            \"author_id\": {",
+											"                \"type\":\"integer\"",
+											"            },",
+											"            \"author\": {",
+											"                \"type\":\"object\"",
+											"            },",
+											"            \"created_at\": {",
+											"                \"type\":\"string\"",
+											"            },",
+											"            \"updated_at\": {",
+											"                \"type\":\"string\"",
+											"            }",
+											"        },",
+											"        \"required\": [",
+											"            \"id\",",
+											"            \"comment\"",
+											"        ]",
+											"    }]",
+											"};",
+											"",
+											"pm.test(\"Status OK\", function () {",
+											"    pm.response.to.be.ok;",
+											"})",
+											"",
+											"pm.test(\"JSON response\", function () {",
+											"    pm.response.to.be.json;",
+											"    pm.response.to.be.an(\"object\");",
+											"    pm.response.to.have.jsonBody(\"success\");",
+											"    pm.response.to.have.jsonBody(\"data\");",
+											"    pm.response.to.not.have.jsonBody(\"error\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: success\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+											"    pm.expect(jsonResponse.success).to.eql(true);",
+											"});",
+											"",
+											"pm.test(\"JSON response: data\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.data).to.be.an(\"array\");",
+											"    pm.expect(tv4.validate(jsonResponse.data, dataSchema)).to.be.true;",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}/comments",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{{post}}",
+										"comments"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "List comments",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}/comments",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts",
+												"{{post}}",
+												"comments"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.15"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 27 Dec 2024 11:10:17 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "phpdebugbar-id",
+											"value": "X8c2f00e7c93143fb366bad577851bb02"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"id\": 5,\n            \"comment\": \"This post is great!\",\n            \"user\": {\n                \"id\": 2,\n                \"name\": \"blogger\",\n                \"email\": \"blogger@example.net\",\n                \"created_at\": \"2024-12-26T07:42:38.000000Z\",\n                \"updated_at\": \"2024-12-26T07:42:38.000000Z\"\n            },\n            \"post\": {\n                \"id\": 34,\n                \"title\": \"Super title\",\n                \"body\": \"My awesome body\",\n                \"author\": {\n                    \"id\": 2,\n                    \"name\": \"blogger\",\n                    \"email\": \"blogger@example.net\",\n                    \"created_at\": \"2024-12-26T07:42:38.000000Z\",\n                    \"updated_at\": \"2024-12-26T07:42:38.000000Z\"\n                },\n                \"status\": {\n                    \"id\": 1,\n                    \"name\": \"draft\"\n                },\n                \"created_at\": \"2024-12-27T11:04:54.000000Z\",\n                \"updated_at\": \"2024-12-27T11:04:54.000000Z\",\n                \"commented\": true\n            },\n            \"created_at\": \"2024-12-27T11:05:01.000000Z\",\n            \"updated_at\": \"2024-12-27T11:05:01.000000Z\"\n        }\n    ]\n}"
+								}
+							]
+						},
+						{
+							"name": "List comments (query)",
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}/comments?paginate=1&page=1",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{{post}}",
+										"comments"
+									],
+									"query": [
+										{
+											"key": "paginate",
+											"value": "1"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "List comments (query)",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}/comments?paginate=1&page=1",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts",
+												"{{post}}",
+												"comments"
+											],
+											"query": [
+												{
+													"key": "paginate",
+													"value": "1"
+												},
+												{
+													"key": "page",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.15"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 27 Dec 2024 11:12:51 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "phpdebugbar-id",
+											"value": "Xa84c3f02aee17a793657442ecfc2255a"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"data\": [\n        {\n            \"id\": 5,\n            \"comment\": \"This post is great!\",\n            \"user\": {\n                \"id\": 2,\n                \"name\": \"blogger\",\n                \"email\": \"blogger@example.net\",\n                \"created_at\": \"2024-12-26T07:42:38.000000Z\",\n                \"updated_at\": \"2024-12-26T07:42:38.000000Z\"\n            },\n            \"post\": {\n                \"id\": 34,\n                \"title\": \"Super title\",\n                \"body\": \"My awesome body\",\n                \"author\": {\n                    \"id\": 2,\n                    \"name\": \"blogger\",\n                    \"email\": \"blogger@example.net\",\n                    \"created_at\": \"2024-12-26T07:42:38.000000Z\",\n                    \"updated_at\": \"2024-12-26T07:42:38.000000Z\"\n                },\n                \"status\": {\n                    \"id\": 1,\n                    \"name\": \"draft\"\n                },\n                \"created_at\": \"2024-12-27T11:04:54.000000Z\",\n                \"updated_at\": \"2024-12-27T11:04:54.000000Z\",\n                \"commented\": true\n            },\n            \"created_at\": \"2024-12-27T11:05:01.000000Z\",\n            \"updated_at\": \"2024-12-27T11:05:01.000000Z\"\n        }\n    ],\n    \"links\": {\n        \"first\": \"http://127.0.0.1:8000/api/posts/34/comments?page=1\",\n        \"last\": \"http://127.0.0.1:8000/api/posts/34/comments?page=1\",\n        \"prev\": null,\n        \"next\": null\n    },\n    \"meta\": {\n        \"current_page\": 1,\n        \"from\": 1,\n        \"last_page\": 1,\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"active\": false\n            },\n            {\n                \"url\": \"http://127.0.0.1:8000/api/posts/34/comments?page=1\",\n                \"label\": \"1\",\n                \"active\": true\n            },\n            {\n                \"url\": null,\n                \"label\": \"Next &raquo;\",\n                \"active\": false\n            }\n        ],\n        \"path\": \"http://127.0.0.1:8000/api/posts/34/comments\",\n        \"per_page\": 15,\n        \"to\": 1,\n        \"total\": 1\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Delete comment",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status OK\", function () {",
+											"    pm.response.to.be.ok;",
+											"})",
+											"",
+											"pm.test(\"JSON response\", function () {",
+											"    pm.response.to.be.json;",
+											"    pm.response.to.be.an(\"object\");",
+											"    pm.response.to.have.jsonBody(\"success\");",
+											"    pm.response.to.have.jsonBody(\"data\");",
+											"    pm.response.to.not.have.jsonBody(\"error\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: success\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+											"    pm.expect(jsonResponse.success).to.eql(true);",
+											"});",
+											"",
+											"pm.test(\"JSON response: data\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.data).to.be.a(\"object\");",
+											"    // Data",
+											"    pm.expect(jsonResponse.data).to.have.property(\"id\");",
+											"    pm.expect(jsonResponse.data).to.have.property(\"comment\");",
+											"    // Relationships",
+											"    pm.expect(jsonResponse.data).to.have.any.key(\"user\",\"user_id\",\"author\",\"author_id\");",
+											"    pm.expect(jsonResponse.data).to.have.any.key(\"post\",\"post_id\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}/comments/{{comment}}",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{{post}}",
+										"comments",
+										"{{comment}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Delete comment",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}/comments/{{comment}}",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts",
+												"{{post}}",
+												"comments",
+												"{{comment}}"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.15"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 27 Dec 2024 11:14:32 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "phpdebugbar-id",
+											"value": "Xadd5277d75ad0b1fd6358dfeebbc0196"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": 5,\n        \"comment\": \"This post is great!\",\n        \"user\": {\n            \"id\": 2,\n            \"name\": \"blogger\",\n            \"email\": \"blogger@example.net\",\n            \"created_at\": \"2024-12-26T07:42:38.000000Z\",\n            \"updated_at\": \"2024-12-26T07:42:38.000000Z\"\n        },\n        \"post\": {\n            \"id\": 34,\n            \"title\": \"Super title\",\n            \"body\": \"My awesome body\",\n            \"author\": {\n                \"id\": 2,\n                \"name\": \"blogger\",\n                \"email\": \"blogger@example.net\",\n                \"created_at\": \"2024-12-26T07:42:38.000000Z\",\n                \"updated_at\": \"2024-12-26T07:42:38.000000Z\"\n            },\n            \"status\": {\n                \"id\": 1,\n                \"name\": \"draft\"\n            },\n            \"created_at\": \"2024-12-27T11:04:54.000000Z\",\n            \"updated_at\": \"2024-12-27T11:04:54.000000Z\",\n            \"commented\": false\n        },\n        \"created_at\": \"2024-12-27T11:05:01.000000Z\",\n        \"updated_at\": \"2024-12-27T11:05:01.000000Z\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Delete comment NOT FOUND",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status 404\", function () {",
+											"    pm.response.to.be.notFound;",
+											"})",
+											"",
+											"pm.test(\"JSON response\", function () {",
+											"    pm.response.to.be.json;",
+											"    pm.response.to.be.an(\"object\");",
+											"    pm.response.to.have.jsonBody(\"success\");",
+											"    pm.response.to.have.jsonBody(\"message\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: success\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+											"    pm.expect(jsonResponse.success).to.eql(false);",
+											"});",
+											"",
+											"pm.test(\"JSON response: message\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.message).to.be.a(\"string\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}/comments/{{comment}}",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{{post}}",
+										"comments",
+										"{{comment}}"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Delete comment NOT FOUND",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}/comments/{{comment}}",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts",
+												"{{post}}",
+												"comments",
+												"{{comment}}"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Wed, 28 Feb 2024 12:38:17 GMT"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.52 (Ubuntu)"
+										},
+										{
+											"key": "Vary",
+											"value": "Authorization"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "X-RateLimit-Limit",
+											"value": "60"
+										},
+										{
+											"key": "X-RateLimit-Remaining",
+											"value": "58"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5, max=99"
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": false,\n    \"message\": \"Comment not found\"\n}"
+								}
+							]
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Delete post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status OK\", function () {",
+									"    pm.response.to.be.ok;",
+									"})",
+									"",
+									"pm.test(\"JSON response\", function () {",
+									"    pm.response.to.be.json;",
+									"    pm.response.to.be.an(\"object\");",
+									"    pm.response.to.have.jsonBody(\"success\");",
+									"    pm.response.to.have.jsonBody(\"data\");",
+									"    pm.response.to.not.have.jsonBody(\"error\");",
+									"});",
+									"",
+									"pm.test(\"JSON response: success\", function () {",
+									"    var jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+									"    pm.expect(jsonResponse.success).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"JSON response: data\", function () {",
+									"    var jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.data).to.be.a(\"object\");",
+									"    // Data",
+									"    pm.expect(jsonResponse.data).to.have.property(\"id\");",
+									"    pm.expect(jsonResponse.data).to.have.property(\"title\");",
+									"    pm.expect(jsonResponse.data).to.have.property(\"body\");",
+									"    pm.expect(jsonResponse.data).to.have.property(\"created_at\");",
+									"    pm.expect(jsonResponse.data).to.have.property(\"updated_at\");",
+									"    // Relationships",
+									"    pm.expect(jsonResponse.data).to.have.any.key(\"status\",\"status_id\");",
+									"    pm.expect(jsonResponse.data).to.have.any.key(\"author\",\"author_id\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"posts",
+								"{{post}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete post",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts/{{post}}",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{{post}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Host",
+									"value": "127.0.0.1:8000"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.15"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 26 Dec 2024 08:31:16 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "phpdebugbar-id",
+									"value": "X5c72c4a78ce9e33e416b0eee90697229"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": 10,\n        \"title\": \"Super title\",\n        \"body\": \"My new body\",\n        \"author\": {\n            \"id\": 2,\n            \"name\": \"blogger\",\n            \"email\": \"blogger@example.net\",\n            \"avatar\": \"http://127.0.0.1:8000/\",\n            \"created_at\": \"2024-12-26T07:42:38.000000Z\",\n            \"updated_at\": \"2024-12-26T07:42:38.000000Z\"\n        },\n        \"status\": {\n            \"id\": 2,\n            \"name\": \"published\"\n        },\n        \"created_at\": \"2024-12-26T07:59:42.000000Z\",\n        \"updated_at\": \"2024-12-26T08:28:19.000000Z\",\n        \"commented\": false\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete post NOT FOUND",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 404\", function () {",
+									"    pm.response.to.be.notFound;",
+									"})",
+									"",
+									"pm.test(\"JSON response\", function () {",
+									"    pm.response.to.be.json;",
+									"    pm.response.to.be.an(\"object\");",
+									"    pm.response.to.have.jsonBody(\"success\");",
+									"    pm.response.to.have.jsonBody(\"message\");",
+									"});",
+									"",
+									"pm.test(\"JSON response: success\", function () {",
+									"    var jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+									"    pm.expect(jsonResponse.success).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"JSON response: message\", function () {",
+									"    var jsonResponse = pm.response.json();",
+									"    pm.expect(jsonResponse.message).to.be.a(\"string\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/posts/{{NOT_EXISTS}}",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"posts",
+								"{{NOT_EXISTS}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete post NOT FOUND",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts/{{NOT_EXISTS}}",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{{NOT_EXISTS}}"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Wed, 28 Feb 2024 12:20:47 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.52 (Ubuntu)"
+								},
+								{
+									"key": "Vary",
+									"value": "Authorization"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "60"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "57"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"success\": false,\n    \"message\": \"Post not found\"\n}"
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status OK\", function () {",
+							"    pm.response.to.be.ok;",
+							"})",
+							"",
+							"pm.test(\"JSON response\", function () {",
+							"    pm.response.to.be.json;",
+							"    pm.response.to.be.an(\"object\");",
+							"    pm.response.to.have.jsonBody(\"success\");",
+							"    pm.response.to.have.jsonBody(\"message\");",
+							"});",
+							"",
+							"pm.test(\"JSON response: success\", function () {",
+							"    var jsonResponse = pm.response.json();",
+							"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+							"    pm.expect(jsonResponse.success).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"JSON response: message\", function () {",
+							"    var jsonResponse = pm.response.json();",
+							"    pm.expect(jsonResponse.message).to.be.a(\"string\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL_ENDPOINT}}/api/logout",
+					"host": [
+						"{{URL_ENDPOINT}}"
+					],
+					"path": [
+						"api",
+						"logout"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Logout",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/logout",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"logout"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Host",
+							"value": "127.0.0.1:8000"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 08 Dec 2022 18:59:05 GMT"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 08 Dec 2022 18:59:05 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "close"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.1.11"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "X-RateLimit-Limit",
+							"value": "60"
+						},
+						{
+							"key": "X-RateLimit-Remaining",
+							"value": "58"
+						},
+						{
+							"key": "phpdebugbar-id",
+							"value": "X19dc8d0ee79d630f1291b718ff92f5b7"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"message\": \"Current token revoked\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Logout UNAUTHENTICATED",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status Unauthorized\", function () {",
+							"    pm.response.to.be.unauthorized;",
+							"})",
+							"",
+							"pm.test(\"JSON response\", function () {",
+							"    pm.response.to.be.json;",
+							"    pm.response.to.be.an(\"object\");",
+							"    pm.response.to.have.jsonBody(\"message\");",
+							"});",
+							"",
+							"pm.test(\"JSON response: message\", function () {",
+							"    var jsonResponse = pm.response.json();",
+							"    pm.expect(jsonResponse.message).to.be.a(\"string\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{URL_ENDPOINT}}/api/logout",
+					"host": [
+						"{{URL_ENDPOINT}}"
+					],
+					"path": [
+						"api",
+						"logout"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Logout UNAUTHENTICATED",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL_ENDPOINT}}/api/logout",
+							"host": [
+								"{{URL_ENDPOINT}}"
+							],
+							"path": [
+								"api",
+								"logout"
+							]
+						}
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Wed, 28 Feb 2024 12:49:50 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Apache/2.4.52 (Ubuntu)"
+						},
+						{
+							"key": "Vary",
+							"value": "Authorization"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Keep-Alive",
+							"value": "timeout=5, max=100"
+						},
+						{
+							"key": "Connection",
+							"value": "Keep-Alive"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"Unauthenticated.\"\n}"
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "file",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "post",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "place",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "comment",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "review",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "NOT_EXISTS",
+			"value": "99999999999999999",
+			"type": "string"
+		}
+	]
+}
