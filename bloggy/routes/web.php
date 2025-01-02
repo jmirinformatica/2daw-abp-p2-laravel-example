@@ -27,6 +27,7 @@ require __DIR__.'/auth.php';
  **********************/
 
 Route::get('/', [SiteController::class, 'home'])->name('home');
+Route::get('/language/{locale}', [SiteController::class, 'language'])->name('language');
 
 Route::get('/contact', [SiteController::class, 'contact'])->name('contact.form');
 Route::post('/contact', [SiteController::class, 'sendMail'])->name('contact.send');

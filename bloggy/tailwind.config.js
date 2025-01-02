@@ -7,6 +7,7 @@ export default {
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
+        './node_modules/tw-elements/js/**/*.js',
         './node_modules/flowbite/**/*.js',
     ],
 
@@ -20,6 +21,7 @@ export default {
 
     plugins: [
         forms,
-        require('flowbite/plugin')
+        require('tw-elements/plugin.cjs'),
+        require('flowbite/plugin'),
     ],
 };
