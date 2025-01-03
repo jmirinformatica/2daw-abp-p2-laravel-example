@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Api;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -154,7 +154,7 @@ class ApiTokenTest extends TestCase
                 $json->where("user.name", $user->name)
                     ->where("user.email", $user->email)
                     ->missing("user.password")
-                    ->has("role")
+                    ->has("user.role")
                     ->etc()
         );
     }
