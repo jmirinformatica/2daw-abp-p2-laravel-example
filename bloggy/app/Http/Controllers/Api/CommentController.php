@@ -67,20 +67,20 @@ class CommentController extends Controller
                 'success'  => false,
                 'message' => 'User has already commented this post'
             ], 400);
-        } else {
-            Log::debug("Saving comment at DB...");
-            $comment = Comment::create([
-                "comment"   => $validatedData["comment"],
-                "post_id"   => $pid,
-                "author_id" => auth()->user()->id,
-            ]);
-            \Log::debug("DB operation OK");
-    
-            return response()->json([
-                'success' => true,
-                'data'    => new CommentResource($comment)
-            ], 201);
         }
+
+        Log::debug("Saving comment at DB...");
+        $comment = Comment::create([
+            "comment"   => $validatedData["comment"],
+            "post_id"   => $pid,
+            "author_id" => auth()->user()->id,
+        ]);
+        \Log::debug("DB operation OK");
+
+        return response()->json([
+            'success' => true,
+            'data'    => new CommentResource($comment)
+        ], 201);
     }
 
     /**
@@ -94,29 +94,30 @@ class CommentController extends Controller
     {
         $comment = Comment::find($id);
 
-        if ($comment) {
-            if ($request->user()->cannot('delete', $comment)) {
-                return response()->json([
-                'success'  => false,
-                'message' => 'Forbidden access'
-            ], 403);
-            }
-            if ($comment->post_id != $pid) {
-                return response()->json([
-                    'success'  => false,
-                    'message' => 'Comment and post mismatch'
-                ], 400);
-            }
-            $comment->delete();
-            return response()->json([
-                'success' => true,
-                'data'    => new CommentResource($comment)
-            ], 200);
-        } else {
+        if (empty($comment)) {
             return response()->json([
                 'success'  => false,
                 'message' => 'Comment not found'
             ], 404);
         }
+        
+        if ($request->user()->cannot('delete', $comment)) {
+            return response()->json([
+                'success'  => false,
+                'message' => 'Forbidden access'
+            ], 403);
+        }
+
+        if ($comment->post_id != $pid) {
+            return response()->json([
+                'success'  => false,
+                'message' => 'Comment and post mismatch'
+            ], 400);
+        }
+            
+        return response()->json([
+            'success' => $comment->delete(),
+            'data'    => new CommentResource($comment)
+        ], 200);
     }
 }
