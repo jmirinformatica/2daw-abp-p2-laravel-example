@@ -52,7 +52,10 @@ class PostController extends Controller
     public function store(PostStoreRequest $request)
     {
         if ($request->user()->cannot('create', Post::class)) {
-            abort(403);
+            return response()->json([
+                'success'  => false,
+                'message' => 'Forbidden access'
+            ], 403);
         }
 
         $validatedData = $request->validated();
@@ -117,7 +120,10 @@ class PostController extends Controller
         }
         
         if ($request->user()->cannot('update', $post)) {
-            abort(403);
+            return response()->json([
+                'success'  => false,
+                'message' => 'Forbidden access'
+            ], 403);
         }
 
         $validatedData = $request->validated();
@@ -166,7 +172,10 @@ class PostController extends Controller
         }
 
         if ($request->user()->cannot('delete', $post)) {
-            abort(403);
+            return response()->json([
+                'success'  => false,
+                'message' => 'Forbidden access'
+            ], 403);
         }
 
         Log::debug("Deleting post {$id} from DB...");

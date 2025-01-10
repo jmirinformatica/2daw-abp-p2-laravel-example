@@ -22,7 +22,10 @@ class CommentController extends Controller
     public function index($pid, Request $request)
     {
         if ($request->user()->cannot('viewAny', Comment::class)) {
-            abort(403);
+            return response()->json([
+                'success'  => false,
+                'message' => 'Forbidden access'
+            ], 403);
         }
 
         Log::debug("Query post $pid comments at DB...");
@@ -46,7 +49,10 @@ class CommentController extends Controller
     public function store($pid, CommentStoreRequest $request)
     {
         if ($request->user()->cannot('create', Comment::class)) {
-            abort(403);
+            return response()->json([
+                'success'  => false,
+                'message' => 'Forbidden access'
+            ], 403);
         }
 
         $validatedData = $request->validated();
@@ -90,7 +96,10 @@ class CommentController extends Controller
 
         if ($comment) {
             if ($request->user()->cannot('delete', $comment)) {
-                abort(403);
+                return response()->json([
+                'success'  => false,
+                'message' => 'Forbidden access'
+            ], 403);
             }
             if ($comment->post_id != $pid) {
                 return response()->json([
