@@ -106,6 +106,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
             'public'        // Disk
         );
         Log::debug("Uploaded file stored at $path");
-        $this->avatar = Storage::url($path);
+        $this->avatar = $path;
     }
 }
