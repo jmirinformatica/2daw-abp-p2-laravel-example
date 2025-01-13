@@ -88,4 +88,20 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     {
         return Storage::url($this->avatar);
     }
+
+    // File methods
+
+    public function uploadAvatar(UploadedFile $upload)
+    {
+        $uploadName = $upload->getClientOriginalName();
+        $uploadSize = $upload->getSize();
+        Log::debug("Storing file '{$uploadName}' ($uploadSize)...");
+        $path = $upload->storeAs(
+            "avatars/{$this->id}", // Path
+            $uploadName,    // Filename
+            'public'        // Disk
+        );
+        Log::debug("Uploaded file stored at $path");
+        $this->avatar = $path;
+    }
 }
