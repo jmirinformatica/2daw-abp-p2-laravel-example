@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Facades\Storage;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
@@ -104,4 +105,20 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         Log::debug("Uploaded file stored at $path");
         $this->avatar = $path;
     }
+
+    // Computed attributes
+    
+    public function avatarUrl() : Attribute
+    {
+        return Attribute::make(
+            get: function () {        
+                $path = $this->avatar;
+                if (empty($path) || str_starts_with($path, 'http')) {
+                    return $path;
+                } else {
+                    return asset(Storage::url($path));
+                }
+            }
+        );
+    }    
 }
