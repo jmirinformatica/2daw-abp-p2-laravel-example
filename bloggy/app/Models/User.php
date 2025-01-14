@@ -107,7 +107,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         Log::debug("Uploaded file stored at $path");
         $this->avatar = $path;
     }
-    
+
     // Computed attributes
     
     public function avatarUrl() : Attribute
@@ -122,5 +122,5 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
                 }
             }
         );
-    }
+    }    
 }

@@ -25,6 +25,11 @@ class PostResource extends Resource
         return __('Content');
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return __('navigation.posts');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
