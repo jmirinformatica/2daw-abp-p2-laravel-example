@@ -98,7 +98,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"email\": \"{{email}}\",\n    \"password\": \"{{password}}\"\n}",
+									"raw": "{\n    \"email\": \"blogger@example.net\",\n    \"password\": \"•••••••\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -106,10 +106,15 @@
 									}
 								},
 								"url": {
-									"raw": "{{URL_ENDPOINT}}/api/login",
+									"raw": "http://127.0.0.1:8000/api/login",
+									"protocol": "http",
 									"host": [
-										"{{URL_ENDPOINT}}"
+										"127",
+										"0",
+										"0",
+										"1"
 									],
+									"port": "8000",
 									"path": [
 										"api",
 										"login"
@@ -2909,6 +2914,133 @@
 					"name": "Likes",
 					"item": [
 						{
+							"name": "Like post NOT FOUND",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status 404\", function () {",
+											"    pm.response.to.be.notFound;",
+											"})",
+											"",
+											"pm.test(\"JSON response\", function () {",
+											"    pm.response.to.be.json;",
+											"    pm.response.to.be.an(\"object\");",
+											"    pm.response.to.have.jsonBody(\"success\");",
+											"    pm.response.to.have.jsonBody(\"message\");",
+											"});",
+											"",
+											"pm.test(\"JSON response: success\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.success).to.be.a(\"boolean\");",
+											"    pm.expect(jsonResponse.success).to.eql(false);",
+											"});",
+											"",
+											"pm.test(\"JSON response: message\", function () {",
+											"    var jsonResponse = pm.response.json();",
+											"    pm.expect(jsonResponse.message).to.be.a(\"string\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {
+									"accept": true
+								}
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{URL_ENDPOINT}}/api/posts/{{NOT_EXISTS}}/likes",
+									"host": [
+										"{{URL_ENDPOINT}}"
+									],
+									"path": [
+										"api",
+										"posts",
+										"{{NOT_EXISTS}}",
+										"likes"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Like post NOT FOUND",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{URL_ENDPOINT}}/api/posts/{{NOT_EXISTS}}/likes",
+											"host": [
+												"{{URL_ENDPOINT}}"
+											],
+											"path": [
+												"api",
+												"posts",
+												"{{NOT_EXISTS}}",
+												"likes"
+											]
+										}
+									},
+									"status": "Not Found",
+									"code": 404,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Host",
+											"value": "127.0.0.1:8000"
+										},
+										{
+											"key": "Connection",
+											"value": "close"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/8.3.15"
+										},
+										{
+											"key": "Cache-Control",
+											"value": "no-cache, private"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 22 Jan 2025 08:25:49 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "phpdebugbar-id",
+											"value": "Xe6e1b32e851ab77e0687f608c5afe32b"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"success\": false,\n    \"message\": \"Post not found\"\n}"
+								}
+							]
+						},
+						{
 							"name": "Like post",
 							"event": [
 								{
@@ -3021,7 +3153,7 @@
 										},
 										{
 											"key": "Date",
-											"value": "Wed, 22 Jan 2025 07:38:20 GMT"
+											"value": "Wed, 22 Jan 2025 08:29:51 GMT"
 										},
 										{
 											"key": "Content-Type",
@@ -3029,7 +3161,7 @@
 										},
 										{
 											"key": "phpdebugbar-id",
-											"value": "X48e886fa8edf3b3d07bb67a6bb7fc6eb"
+											"value": "X57346c57404938bde09f6d19b167b8f6"
 										},
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -3037,19 +3169,19 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"success\": true,\n    \"data\": {\n        \"user_id\": 2,\n        \"post_id\": \"260\",\n        \"id\": 1\n    }\n}"
+									"body": "{\n    \"success\": true,\n    \"data\": {\n        \"user_id\": 2,\n        \"post_id\": \"262\",\n        \"id\": 4\n    }\n}"
 								}
 							]
 						},
 						{
-							"name": "Like post ERROR",
+							"name": "Like post FORBIDDEN",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status 400\", function () {",
-											"    pm.response.to.be.badRequest;",
+											"pm.test(\"Status 403\", function () {",
+											"    pm.response.to.be.forbidden;",
 											"})",
 											"",
 											"pm.test(\"JSON response\", function () {",
@@ -3103,7 +3235,7 @@
 							},
 							"response": [
 								{
-									"name": "Like post ERROR",
+									"name": "Like post FORBIDDEN",
 									"originalRequest": {
 										"method": "POST",
 										"header": [
@@ -3126,8 +3258,8 @@
 											]
 										}
 									},
-									"status": "Internal Server Error",
-									"code": 500,
+									"status": "Forbidden",
+									"code": 403,
 									"_postman_previewlanguage": "json",
 									"header": [
 										{
@@ -3135,40 +3267,28 @@
 											"value": "127.0.0.1:8000"
 										},
 										{
-											"key": "Date",
-											"value": "Thu, 08 Dec 2022 19:12:46 GMT"
-										},
-										{
-											"key": "Date",
-											"value": "Thu, 08 Dec 2022 19:12:46 GMT"
-										},
-										{
 											"key": "Connection",
 											"value": "close"
 										},
 										{
 											"key": "X-Powered-By",
-											"value": "PHP/8.1.11"
+											"value": "PHP/8.3.15"
 										},
 										{
 											"key": "Cache-Control",
 											"value": "no-cache, private"
 										},
 										{
+											"key": "Date",
+											"value": "Wed, 22 Jan 2025 08:26:56 GMT"
+										},
+										{
 											"key": "Content-Type",
 											"value": "application/json"
 										},
 										{
-											"key": "X-RateLimit-Limit",
-											"value": "60"
-										},
-										{
-											"key": "X-RateLimit-Remaining",
-											"value": "59"
-										},
-										{
 											"key": "phpdebugbar-id",
-											"value": "X8cd8d4e2a5d5dc9d561327b57f442d9e"
+											"value": "X5ba7e84191f8bdb2caa7bf34494df3ef"
 										},
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -3176,7 +3296,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"success\": false,\n    \"message\": \"Like already exists\"\n}"
+									"body": "{\n    \"success\": false,\n    \"message\": \"Forbidden access\"\n}"
 								}
 							]
 						},
@@ -3280,40 +3400,28 @@
 											"value": "127.0.0.1:8000"
 										},
 										{
-											"key": "Date",
-											"value": "Thu, 08 Dec 2022 19:09:04 GMT"
-										},
-										{
-											"key": "Date",
-											"value": "Thu, 08 Dec 2022 19:09:04 GMT"
-										},
-										{
 											"key": "Connection",
 											"value": "close"
 										},
 										{
 											"key": "X-Powered-By",
-											"value": "PHP/8.1.11"
+											"value": "PHP/8.3.15"
 										},
 										{
 											"key": "Cache-Control",
 											"value": "no-cache, private"
 										},
 										{
+											"key": "Date",
+											"value": "Wed, 22 Jan 2025 08:29:57 GMT"
+										},
+										{
 											"key": "Content-Type",
 											"value": "application/json"
 										},
 										{
-											"key": "X-RateLimit-Limit",
-											"value": "60"
-										},
-										{
-											"key": "X-RateLimit-Remaining",
-											"value": "59"
-										},
-										{
 											"key": "phpdebugbar-id",
-											"value": "X7a737e3afc1345726deb616bcc900b92"
+											"value": "X07c21954f2555be357b787174b6209fe"
 										},
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -3321,19 +3429,19 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": 6,\n        \"user_id\": 173,\n        \"post_id\": 1\n    }\n}"
+									"body": "{\n    \"success\": true,\n    \"data\": {\n        \"id\": 4,\n        \"user_id\": 2,\n        \"post_id\": 262\n    }\n}"
 								}
 							]
 						},
 						{
-							"name": "Unlike post ERROR",
+							"name": "Unlike post FORBIDDEN",
 							"event": [
 								{
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Status 400 or 404\", function () {",
-											"    pm.expect(pm.response.code).to.be.oneOf([400,404]);",
+											"pm.test(\"Status 403\", function () {",
+											"    pm.response.to.be.forbidden;",
 											"})",
 											"",
 											"pm.test(\"JSON response\", function () {",
@@ -3387,7 +3495,7 @@
 							},
 							"response": [
 								{
-									"name": "Unlike post ERROR",
+									"name": "Unlike post FORBIDDEN",
 									"originalRequest": {
 										"method": "DELETE",
 										"header": [
@@ -3410,8 +3518,8 @@
 											]
 										}
 									},
-									"status": "Not Found",
-									"code": 404,
+									"status": "Forbidden",
+									"code": 403,
 									"_postman_previewlanguage": "json",
 									"header": [
 										{
@@ -3419,40 +3527,28 @@
 											"value": "127.0.0.1:8000"
 										},
 										{
-											"key": "Date",
-											"value": "Thu, 08 Dec 2022 19:09:12 GMT"
-										},
-										{
-											"key": "Date",
-											"value": "Thu, 08 Dec 2022 19:09:12 GMT"
-										},
-										{
 											"key": "Connection",
 											"value": "close"
 										},
 										{
 											"key": "X-Powered-By",
-											"value": "PHP/8.1.11"
+											"value": "PHP/8.3.15"
 										},
 										{
 											"key": "Cache-Control",
 											"value": "no-cache, private"
 										},
 										{
+											"key": "Date",
+											"value": "Wed, 22 Jan 2025 08:29:27 GMT"
+										},
+										{
 											"key": "Content-Type",
 											"value": "application/json"
 										},
 										{
-											"key": "X-RateLimit-Limit",
-											"value": "60"
-										},
-										{
-											"key": "X-RateLimit-Remaining",
-											"value": "58"
-										},
-										{
 											"key": "phpdebugbar-id",
-											"value": "X52a49d75147b7542bd681220995602c1"
+											"value": "X0adc4fd5d60b580b13b87ad111392588"
 										},
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -3460,7 +3556,7 @@
 										}
 									],
 									"cookie": [],
-									"body": "{\n    \"success\": false,\n    \"message\": \"Like not exists\"\n}"
+									"body": "{\n    \"success\": false,\n    \"message\": \"Forbidden access\"\n}"
 								}
 							]
 						}
