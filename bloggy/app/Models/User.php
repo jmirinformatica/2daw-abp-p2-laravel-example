@@ -6,19 +6,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
-
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -106,6 +106,22 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
             'public'        // Disk
         );
         Log::debug("Uploaded file stored at $path");
-        $this->avatar = Storage::url($path);
+        $this->avatar = $path;
     }
+
+    // Computed attributes
+    
+    public function avatarUrl() : Attribute
+    {
+        return Attribute::make(
+            get: function () {        
+                $path = $this->avatar;
+                if (empty($path) || str_starts_with($path, 'http')) {
+                    return $path;
+                } else {
+                    return asset(Storage::url($path));
+                }
+            }
+        );
+    }    
 }

@@ -23,6 +23,11 @@ class CommentResource extends Resource
     {
         return __('Content');
     }
+    
+    public static function getNavigationLabel(): string
+    {
+        return __('navigation.comments');
+    }
 
     public static function form(Form $form): Form
     {

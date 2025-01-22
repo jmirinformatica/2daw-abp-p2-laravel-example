@@ -48,8 +48,8 @@
         </div>
 
         <div>
-            @if (!empty($user->avatar))
-            <img src="{{ asset($user->avatar) }}" :title="__('Avatar')" class="w-full"/>
+            @if (!empty($user->avatarUrl))
+            <img src="{{ $user->avatarUrl }}" :title="__('Avatar')" class="w-full"/>
             @endif
             <x-input-label for="avatar" :value="__('Avatar')" />
             <x-text-input id="avatar" name="avatar" type="file" class="mt-1 block w-full" autofocus autocomplete="avatar" />

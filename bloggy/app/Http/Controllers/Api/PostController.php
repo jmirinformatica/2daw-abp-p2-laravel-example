@@ -225,8 +225,8 @@ class PostController extends Controller
             Log::error($e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => "Like already exists"
-            ], 400);
+                'message' => "Error saving like"
+            ], 500);
         }
         
         return response()->json([
@@ -251,8 +251,8 @@ class PostController extends Controller
                 'message' => 'Post not found'
             ], 404);
         }
-
-        if ($request->user()->cannot('like', $post)) {
+        
+        if ($request->user()->cannot('unlike', $post)) {
             return response()->json([
                 'success'  => false,
                 'message' => 'Forbidden access'

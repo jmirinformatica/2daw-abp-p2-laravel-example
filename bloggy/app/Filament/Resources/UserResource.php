@@ -27,6 +27,11 @@ class UserResource extends Resource
         return __('Security');
     }
 
+    public static function getNavigationLabel(): string
+    {
+        return __('navigation.users');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
