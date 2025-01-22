@@ -50,7 +50,7 @@ class Post extends Model
 
     public function commentedByAuthUser()
     {
-        $user = auth()->user();
+        $user = auth()->user() ?: auth('sanctum')->user();
         return $user && $this->commentedByUser($user);
     }
 
@@ -64,4 +64,29 @@ class Post extends Model
         return $this->status_id === Status::PUBLISHED;
     }
 
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function liked()
+    {
+        return $this->belongsToMany(User::class, 'likes');
+    }
+    
+    public function likedByUser(User $user)
+    {
+        $count = Like::where([
+            ['user_id',  '=', $user->id],
+            ['post_id', '=', $this->id],
+        ])->count();
+        
+        return $count > 0;
+    }
+
+    public function likedByAuthUser()
+    {
+        $user = auth()->user() ?: auth('sanctum')->user();
+        return $user && $this->likedByUser($user);
+    }
 }

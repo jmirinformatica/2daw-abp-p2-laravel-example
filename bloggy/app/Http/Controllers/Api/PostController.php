@@ -6,14 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-use App\Http\Requests\PostStoreRequest;
-use App\Http\Requests\PostUpdateRequest;
-
 use App\Models\Post;
-use App\Models\File;
 use App\Models\Like;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\PostCollection;
+use App\Http\Requests\PostStoreRequest;
+use App\Http\Requests\PostUpdateRequest;
 
 class PostController extends Controller
 {
@@ -25,7 +23,7 @@ class PostController extends Controller
     public function index(Request $request)
     {
         Log::debug("Query posts at DB...");
-        $query = Post::withCount(['comments']);
+        $query = Post::withCount(['comments','likes']);
 
         // Filters?
         if ($body = $request->get('body')) {
@@ -52,7 +50,10 @@ class PostController extends Controller
     public function store(PostStoreRequest $request)
     {
         if ($request->user()->cannot('create', Post::class)) {
-            abort(403);
+            return response()->json([
+                'success'  => false,
+                'message' => 'Forbidden access'
+            ], 403);
         }
 
         $validatedData = $request->validated();
@@ -90,7 +91,7 @@ class PostController extends Controller
             ], 404);    
         }
         
-        $post->loadCount(['comments']);
+        $post->loadCount(['comments','likes']);
 
         return response()->json([
             'success' => true,
@@ -117,7 +118,10 @@ class PostController extends Controller
         }
         
         if ($request->user()->cannot('update', $post)) {
-            abort(403);
+            return response()->json([
+                'success'  => false,
+                'message' => 'Forbidden access'
+            ], 403);
         }
 
         $validatedData = $request->validated();
@@ -166,7 +170,10 @@ class PostController extends Controller
         }
 
         if ($request->user()->cannot('delete', $post)) {
-            abort(403);
+            return response()->json([
+                'success'  => false,
+                'message' => 'Forbidden access'
+            ], 403);
         }
 
         Log::debug("Deleting post {$id} from DB...");
@@ -184,4 +191,89 @@ class PostController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Do like
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function like($id, Request $request) 
+    {
+        $post = Post::find($id);
+
+        if (empty($post)) {
+            return response()->json([
+                'success'  => false,
+                'message' => 'Post not found'
+            ], 404);
+        }
+
+        if ($request->user()->cannot('like', $post)) {
+            return response()->json([
+                'success'  => false,
+                'message' => 'Forbidden access'
+            ], 403);
+        }
+
+        try {
+            $like = Like::create([
+                'user_id'  => $request->user()->id,
+                'post_id' => $id
+            ]);
+        } catch (\Illuminate\Database\QueryException $e) {
+            Log::error($e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => "Like already exists"
+            ], 400);
+        }
+        
+        return response()->json([
+            'success' => true,
+            'data'    => $like
+        ], 200);
+    }
+
+    /**
+     * Undo like
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function unlike($id, Request $request)
+    {
+        $post = Post::find($id);
+
+        if (empty($post)) {
+            return response()->json([
+                'success'  => false,
+                'message' => 'Post not found'
+            ], 404);
+        }
+
+        if ($request->user()->cannot('like', $post)) {
+            return response()->json([
+                'success'  => false,
+                'message' => 'Forbidden access'
+            ], 403);
+        }
+
+        $like = Like::where([
+            ['user_id', '=', $request->user()->id],
+            ['post_id', '=', $id],
+        ])->first();
+
+        if ($like) {
+            return response()->json([
+                'success' => $like->delete(),
+                'data'    => $like
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => "Like not exists"
+            ], 404); 
+        }
+    }    
 }

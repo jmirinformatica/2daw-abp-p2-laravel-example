@@ -13,7 +13,7 @@ class PostResource extends JsonResource
      * @return array<string, mixed>
      */
     public function toArray($request)
-    {       
+    {
         return [
             'id'         => $this->id,
             'title'      => $this->title,
@@ -23,9 +23,11 @@ class PostResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             // Conditional data
-            'comments_count' => $this->whenCounted('comments'),
             'comments' => CommentResource::collection($this->whenLoaded('comments')),
-            'commented' => $this->when(!is_null($request->user()), $this->commentedByAuthUser())
+            'comments_count' => $this->whenCounted('comments'),
+            'commented' => $this->commentedByAuthUser(),
+            'likes_count'=> $this->whenCounted('likes'),
+            'liked' => $this->likedByAuthUser()
         ];
     }
 }

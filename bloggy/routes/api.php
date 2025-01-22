@@ -27,4 +27,11 @@ Route::middleware('auth:sanctum')->group(function () {
         ->only('store', 'update', 'destroy');
     // Comments (nested routes)
     Route::apiResource('posts.comments', CommentController::class);
+    // Likes
+    Route::controller(PostController::class)->group(function () {
+        Route::post('posts/{post}/likes', 'like')
+            ->name('posts.like');
+        Route::delete('posts/{post}/likes', 'unlike')
+            ->name('posts.unlike');
+    });
 });
